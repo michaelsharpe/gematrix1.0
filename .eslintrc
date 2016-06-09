@@ -2,7 +2,9 @@
   'env': {
     'browser': true,
     'node': true,
-    'es6': true
+    'es6': true,
+    'jasmine': true,
+    'mocha': true
   },
   'ecmaFeatures': {
     'arrowFunctions': true,

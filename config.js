@@ -1,5 +1,8 @@
 module.exports = {
   appName: 'gematrix',
   port: process.env.PORT || 2368,
-  database: process.env.DATABASE || 'mongodb://root@localhost:27017/gematrix'
+  db: {
+    test:'mongodb://localhost:27017/gematrix-test',
+    server: process.env.DATABASE || 'mongodb://localhost:27017/gematrix'
+  }
 }
