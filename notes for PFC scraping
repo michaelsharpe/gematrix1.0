@@ -1,0 +1,38 @@
+pdf structure
+C = Capital letter
+s = space
+. = unknown extension of previous character(s)
+(cC) = capital or lowercase letter
+(.) = period
+
+File format for data:
+------------------------
+
+New Page
+  - Number ?(brackets)?
+  - Comments
+  - WORD/Spelling pronunciation =  CCss..(cC)..(.)
+    - translation (.)
+    - comments follow until next WORD at new /p
+    - see  num, num
+
+Data structure
+-------------------------
+
+numeral : {
+  see: [num, num, num],
+  comments: [
+
+  ],
+  entries: [
+    {
+      word: "",
+      value: "",
+      pronunciation: "",
+      comments: [
+
+      ],
+      see: [num, num, num]
+    }
+  ]
+}
