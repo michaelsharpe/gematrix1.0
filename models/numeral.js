@@ -4,6 +4,7 @@ const Comment = require('./comment');
 
 const NumeralSchema = new mongoose.Schema({
   value: { type: Number, required: true },
+  math: [{ type: String }],
   comments: [Comment.schema],
   entries: [Entry.schema],
   createdAt: { type: Date, required: true, default: Date.now() },
