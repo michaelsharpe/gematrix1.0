@@ -3,101 +3,26 @@
 
 const cheerio = require('cheerio');
 const fs = require('fs');
-const s = require("underscore.string");
+const s = require('underscore.string');
 
 const rawHtml = fs.readFileSync('./pfc_notebooks.html', 'utf8');
 const $ = cheerio.load(rawHtml);
 
-function createNumeral() {
-  return {
-    value: 0,
-    math: [],
-    comments: [],
-    entries: [],
-    see: []
-  };
-}
+const {
+  parseNumeral,
+  parseParagraph,
+  isEmpty
+} = require('./scraper_helper');
 
-function createComment() {
-  return {
-    type: '',
-    content: '',
-    see: []
-  };
-}
+const state = {
+  numerals: [],
+  currentNumeral: {},
+  currentComment: {},
+  currentEntry: {},
+  paragraphArray: [],
+  currentParagraph: ''
+};
 
-function createEntry() {
-  return {
-    numeral: '',
-    word: '',
-    language: '',
-    pronunciation: '',
-    comments: [],
-    see: []
-  };
-}
-
-function decomposeNumeral(line) {
-  const numeral = createNumeral();
-  const cleaned = s(line).clean().value();
-  const splitNumeralRegex = new RegExp(/(^[0-9]*)\s?(\(.*\))?\s?(.*)?/);
-  const rawArray = cleaned.match(splitNumeralRegex);
-  // drop the 0 index.  It is just the full string.
-  rawArray.shift();
-
-  numeral.value = +(rawArray.shift());
-
-  for (let i = 0; i <= rawArray.length; i++) {
-    if (rawArray[i]) {
-      numeral.math.push(rawArray[i]);
-    } else {
-      break;
-    }
-  }
-
-  return numeral;
-}
-
-
-function matchNumeral(str) {
-  const checkForNumberRegex = new RegExp(/^[1234567890]*[^\(\)]\s{0,5}\([prime0-9*-+\/]*\)/, 'g');
-
-  return str.match(checkForNumberRegex);
-}
-
-function findNumeral(page, cb) {
-  let rawNumeral = '';
-  $(page).children().each((divIndex, div) => {
-    const line = $(div).text();
-
-    if (divIndex === 0) {
-      const firstLineNumeral = matchNumeral(line);
-
-      if (firstLineNumeral && firstLineNumeral[0] !== '') {
-        cb(divIndex, decomposeNumeral(line));
-      }
-    } else if (divIndex < 7) {
-      const matchLineNumeral = matchNumeral(line);
-
-      if (matchLineNumeral && matchLineNumeral[0] !== '') {
-        cb(divIndex, decomposeNumeral(line));
-      }
-    }
-  });
-}
-
-let numerals = [];
-let currentNumber = {};
-let currentComment = {};
-let currentEntry = {};
-
-// Regexs
-// \([a-zA-Z1-9*]*\)\s*[0-9*\s+-Σ=]\n
-const checkForHebrewRegex = '[ABGDHVZChTIKLMNSOPTzQRShTh\\s]*\\s[^.]*';
-const checkGreekRegex = '^[A-Za-z\s]{1,}\(Gr\)\.';
-const checkLatinRegex = '^[A-Za-z\s]{1,}\(Lt\)\.';
-
-// const seeRegex = new RegExp("((?:see)\s(?:[0-9]*\,*\s*(?:\(*Latin\)*)*)*)", "g");
 // need 2-1860(master Gematria)
 // 1788 - 1812 - multiple numbers on a page, but uses () with all numbers
 // 1812 - 1860 - new format.  No ().  Multiple numbers to a page.  Brief entries.
@@ -106,8 +31,78 @@ const checkLatinRegex = '^[A-Za-z\s]{1,}\(Lt\)\.';
 $('.pc').each((pageIndex, page) => {
   // 2-1787 - follows format of 1 number per page
   if (pageIndex > 0 && pageIndex < 1787) {
-    findNumeral(page, (divIndex, numeral) => {
-      console.log(numeral);
+    $(page).children().each((lineIndex, lineDiv) => {
+      const line = $(lineDiv).text();
+      // Check for a numeral
+      const numeralState = parseNumeral(line, numeral => {
+        // If there is no current numeral, we are starting the parsing
+        if (isEmpty(state.currentNumeral) && numeral) {
+          state.currentNumeral = numeral;
+        }
+
+        // If there is a current numeral, and no numeral is found, we are still parsing
+        // the last one
+        if (!isEmpty(state.currentNumeral) && !numeral) {
+          // Check to see if the current line is empty
+          if ($(lineDiv).hasClass('ls1') && (s(line).clean().value() === '')) {
+            // If the line is empty, check to see if there is a current paragraph
+            if (state.currentParagraph !== '') {
+              // If there is no current entry, we check to see if it is one
+              if (isEmpty(state.currentEntry)) {
+
+              } else {
+                // if there is no current entry, and the line isn't the start
+                // of an entry, the paragraph is a numeral comment
+                state.currentNumeral.comments = [...state.currentNumeral.comments, state.currentParagraph];
+                // Next we reset the current paragraph
+                state.currentParagraph = '';
+              }
+
+
+              // if there is a current paragraph, we need to parse it
+              parseParagraph(state.currentParagraph);
+              state.currentParagraph = '';
+            }
+          } else {
+            // Otherwise, add the line to the current paragraph
+            state.currentParagraph += line;
+          }
+        }
+
+        // If there is a currentNumeral and we hit another one, we need to set the
+        // state for a new numeral
+        if (!isEmpty(state.currentNumeral) && numeral) {
+          // Reset the current properties
+
+          if (!isEmpty(state.currentEntry)) {
+            // If there is an entry hanging around, and a comment, the comment
+            // belongs to the entry
+            if (!isEmpty(state.currentComment)) {
+              state.entry.comments = [...state.entry.comments, state.currentComment];
+              state.currentComment = {};
+            }
+
+            // push the updated entry into the current numeral
+            state.currentNumeral.entries = [...state.numeral.entries, state.currentEntry];
+            // reset entry
+            state.currentEntry = {};
+          } else {
+            // If the entry is empty, check to see if there is a comment
+            if (!isEmpty(state.currentComment)) {
+              // if there is, it belongs to the numeral itself
+              state.currentNumeral.comments = [...state.currentNumeral.comments, state.currentComment];
+              state.currentComment = {};
+            }
+          }
+
+          // Make sure the current paragraph is empty (it should be by now)
+          state.currentParagraph = '';
+          // Push the last numeral into the numerals array
+          state.numerals = [...state.numerals, numeral];
+          // Set the current numeral to the new numeral
+          state.currentNumeral = numeral;
+        }
+      });
     });
   }
 });
