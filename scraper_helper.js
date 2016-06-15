@@ -1,14 +1,12 @@
 /* eslint no-unused-vars: 0 */
 /* eslint prefer-const: 0 */
+/* eslint no-else-return: 0 */
 
 const s = require('underscore.string');
 
-// Regexs
-// \([a-zA-Z1-9*]*\)\s*[0-9*\s+-Σ=]\n
-// // const seeRegex = new RegExp("((?:see)\s(?:[0-9]*\,*\s*(?:\(*Latin\)*)*)*)", "g");
-const checkForHebrewRegex = '[ABGDHVZChTIKLMNSOPTzQRShTh\\s]*\\s[^.]*';
-const checkGreekRegex = '^[A-Za-z\s]{1,}\(Gr\)\.';
-const checkLatinRegex = '^[A-Za-z\s]{1,}\(Lt\)\.';
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
 
 function createNumeral() {
   return {
@@ -32,10 +30,10 @@ function createEntry() {
   return {
     numeral: '',
     word: '',
+    definition: '',
     language: '',
     pronunciation: '',
-    comments: [],
-    see: []
+    comments: []
   };
 }
 
@@ -70,7 +68,6 @@ function parseNumeral(line, cb) {
   const match = matchNumeral(line);
 
   if (match && match[0] !== '') {
-    // console.log(decomposeNumeral(line).value);
     return cb(decomposeNumeral(line));
   }
 
@@ -78,7 +75,7 @@ function parseNumeral(line, cb) {
 }
 
 function parseWordEntry(sentence, cb) {
-  const result = {};
+  const entry = createEntry();
   // Clean the sentences. Remove '+'.
   const strippedSentence = sentence.split('').filter(l => l !== '+').join('');
   const cleanedSentence = s(strippedSentence).clean().value();
@@ -86,19 +83,18 @@ function parseWordEntry(sentence, cb) {
   const arr = cleanedSentence.split(' ');
   const singleHebrewRegex = new RegExp(/^(Ch|Sh|Th|Tz|\[Heh\]|Aleph|[ABGDHVZCTIKLMNSOPQR])$/);
   const hebrewWordRegex = new RegExp(/^(Ch|Sh|Th|Tz|[ABGDHVZCTIKLMNSOPQR-])*$/);
-
   // SINGLE HEBREW LETTER
   // check the first word to see if it is a match of a single hebrew letter
   const letterMatch = arr[0].match(singleHebrewRegex);
 
   if (letterMatch && letterMatch[0] !== '') {
     if (arr.length === 2) {
-      result.word = arr[0];
-      result.pronunciation = arr[1];
-      result.langauge = 'hebrew';
-      result.comment = '';
+      entry.word = arr[0];
+      entry.pronunciation = arr[1];
+      entry.langauge = 'hebrew';
+      entry.comment = '';
 
-      return result;
+      return entry;
     }
   }
 
@@ -108,7 +104,7 @@ function parseWordEntry(sentence, cb) {
   const otherWords = [];
 
   if (hebrewWordMatch && hebrewWordMatch[0] !== '' && arr[0].length !== 1) {
-    result.language = 'hebrew';
+    entry.language = 'hebrew';
 
     arr.forEach(word => {
       const matchWord = word.match(hebrewWordRegex);
@@ -120,15 +116,15 @@ function parseWordEntry(sentence, cb) {
       }
     });
 
-    result.word = hebrewWords.join(' ');
+    entry.word = hebrewWords.join(' ');
 
     if (otherWords.length > hebrewWords.length + 2) {
-      result.comment = otherWords.join(' ');
+      entry.comment = otherWords.join(' ');
     } else {
-      result.pronunciation = otherWords.join(' ');
+      entry.pronunciation = otherWords.join(' ');
     }
 
-    return result;
+    return entry;
   }
 
   // GREEK
@@ -138,11 +134,10 @@ function parseWordEntry(sentence, cb) {
 
   const greekWordMatch = arr[0].match(greekWordRegex);
   if (greekWordMatch && greekWordMatch[0] !== '') {
-    result.language = 'greek';
+    entry.language = 'greek';
     // First we need to strip out this broken greek
     const greekStripped = sentence.split('').filter(l => {
       const englishMatch = l.match(new RegExp(/[a-zA-Z\s\(\)]/));
-      // console.log(englishMatch);
       if (englishMatch) {
         return l;
       }
@@ -151,8 +146,8 @@ function parseWordEntry(sentence, cb) {
     const cleanGreekSentence = s(greekStripped).clean().value();
 
     if (cleanGreekSentence !== '') {
-      result.word = cleanGreekSentence;
-      return result;
+      entry.word = cleanGreekSentence;
+      return entry;
     }
   } else {
     // This ensures that we filter out words that already have greek letters
@@ -161,9 +156,9 @@ function parseWordEntry(sentence, cb) {
     const greekEnglishMatch = arr.join('').match(greekEnglishRegex);
 
     if (greekEnglishMatch && greekEnglishMatch[0] !== '') {
-      result.word = cleanedSentence;
-      result.language = 'greek';
-      return result;
+      entry.word = cleanedSentence;
+      entry.language = 'greek';
+      return entry;
     }
   }
 
@@ -172,34 +167,142 @@ function parseWordEntry(sentence, cb) {
 
   const latinMatch = arr.join(' ').match(latinRegex);
   if (latinMatch && latinMatch[0] !== '') {
-    result.language = 'latin';
+    entry.language = 'latin';
 
     if (latinMatch[1]) {
-      result.word = latinMatch[1];
+      entry.word = latinMatch[1];
     }
 
     if (latinMatch[2]) {
-      result.translation = latinMatch[2];
+      entry.translation = latinMatch[2];
     }
 
-    return result;
+    return entry;
   }
+
+  // if it gets this far, there was nothing
+  return false;
 }
 
-function parseParagraph(paragraph, cb) {
+function parseReferences(sentence, cb) {
+  const referenceRegex = new RegExp(/\bsee\s([0-9\s,]*(?:[GgreekLlatin]*)[0-9,\s]*)/);
+  const referenceMatch = sentence.match(referenceRegex);
+  const references = [];
+
+  if (referenceMatch && referenceMatch[0] !== '') {
+    const cleanCommas = referenceMatch[0].split('').filter(l => l !== ',').join('');
+
+    cleanCommas.split(' ').forEach(chunk => {
+      if (parseInt(chunk, 10)) {
+        references.push(chunk);
+      }
+    });
+
+    return cb(sentence, references);
+  }
+
+  return cb(sentence, false);
+}
+
+function parseParagraph(state, cb) {
+  const paragraph = state.currentParagraph;
   // First we convert the string into a clean array of sentences.
   const arr = s(paragraph).clean().split('.');
   // Next we check to see if the first index is a word entry
   const entry = parseWordEntry(arr[0]);
+  // If the entry isn't empty, it means that the paragraph is one.
+  if (!isEmpty(entry)) {
+    // If we hit a new entry, we need to check for a previous one
+    if (!isEmpty(state.currentEntry)) {
+      // If it exists, push the previous entry into the numerals entries
+      state.currentNumeral.entries.push(state.currentEntry);
+    }
 
-  if (entry) {
-    const {word, pronunciation, language, translation} = entry;
-    console.log(entry);
+    // Now we remove the first sentence
+    arr.shift();
+
+    // We assume that the next sentence is the definition
+    if (entry.defintion) {
+      entry.definition += arr.shift();
+    } else {
+      entry.definition = arr.shift();
+    }
+
+    const entryComment = createComment();
+    entryComment.type = 'entry';
+    const referencedParagraph = [];
+
+    arr.forEach(sentence => {
+      parseReferences(sentence, (sent, refs) => {
+        if (refs) {
+          entryComment.see = [...entryComment.see, ...refs];
+        } else {
+          referencedParagraph.push(sent);
+        }
+      });
+    });
+
+    entryComment.content = referencedParagraph.join(' ');
+
+    if (entryComment.content !== '') {
+      entry.comments = [...entry.comments, entryComment];
+      entry.numeral = state.currentNumeral.value;
+    }
+
+    // We now set the entry to the current entry on the state
+    state.currentEntry = entry;
+
+    cb(state);
+  } else {
+    // if there is still an entry here, we havent finished parsing
+    // the last one
+    if (!isEmpty(state.currentEntry)) {
+      const currentEntryComment = createComment();
+      currentEntryComment.type = 'entry';
+      const currentReferencedParagraph = [];
+
+      arr.forEach(sentence => {
+        parseReferences(sentence, (sent, refs) => {
+          if (refs) {
+            currentEntryComment.see = [...currentEntryComment.see, ...refs];
+          } else {
+            currentReferencedParagraph.push(sent);
+          }
+        });
+      });
+
+      currentEntryComment.content = currentReferencedParagraph.join(' ');
+
+      if (currentEntryComment.content !== '') {
+        state.currentEntry.comments = [...state.currentEntry.comments, currentEntryComment];
+      }
+
+      cb(state);
+    } else {
+      // If we get here, we are still on a paragraph from the numeral
+      const numeralComment = createComment();
+      numeralComment.type = 'numeral';
+      const numeralReferencedParagraph = [];
+
+      arr.forEach(sentence => {
+        parseReferences(sentence, (sent, refs) => {
+          if (refs) {
+            numeralComment.see = [...numeralComment.see, ...refs];
+          } else {
+            numeralReferencedParagraph.push(sent);
+          }
+        });
+      });
+
+      numeralComment.content = numeralReferencedParagraph.join(' ');
+
+      if (numeralComment.content !== '') {
+        state.currentNumeral.comments = [...state.currentNumeral.comments, numeralComment];
+      }
+    }
+
+    cb(state);
   }
-}
-
-function isEmpty(obj) {
-  return Object.keys(obj).length === 0;
 }
 
 module.exports = Object.freeze({

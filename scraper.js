@@ -14,7 +14,7 @@ const {
   isEmpty
 } = require('./scraper_helper');
 
-const state = {
+let state = {
   numerals: [],
   currentNumeral: {},
   currentComment: {},
@@ -47,20 +47,9 @@ $('.pc').each((pageIndex, page) => {
           if ($(lineDiv).hasClass('ls1') && (s(line).clean().value() === '')) {
             // If the line is empty, check to see if there is a current paragraph
             if (state.currentParagraph !== '') {
-              // If there is no current entry, we check to see if it is one
-              if (isEmpty(state.currentEntry)) {
-
-              } else {
-                // if there is no current entry, and the line isn't the start
-                // of an entry, the paragraph is a numeral comment
-                state.currentNumeral.comments = [...state.currentNumeral.comments, state.currentParagraph];
-                // Next we reset the current paragraph
-                state.currentParagraph = '';
-              }
-
-
-              // if there is a current paragraph, we need to parse it
-              parseParagraph(state.currentParagraph);
+              parseParagraph(state, updatedState => {
+                state = updatedState;
+              });
               state.currentParagraph = '';
             }
           } else {
@@ -75,24 +64,10 @@ $('.pc').each((pageIndex, page) => {
           // Reset the current properties
 
           if (!isEmpty(state.currentEntry)) {
-            // If there is an entry hanging around, and a comment, the comment
-            // belongs to the entry
-            if (!isEmpty(state.currentComment)) {
-              state.entry.comments = [...state.entry.comments, state.currentComment];
-              state.currentComment = {};
-            }
-
             // push the updated entry into the current numeral
-            state.currentNumeral.entries = [...state.numeral.entries, state.currentEntry];
+            state.currentNumeral.entries.push(state.currentEntry);
             // reset entry
             state.currentEntry = {};
-          } else {
-            // If the entry is empty, check to see if there is a comment
-            if (!isEmpty(state.currentComment)) {
-              // if there is, it belongs to the numeral itself
-              state.currentNumeral.comments = [...state.currentNumeral.comments, state.currentComment];
-              state.currentComment = {};
-            }
           }
 
           // Make sure the current paragraph is empty (it should be by now)
@@ -106,3 +81,5 @@ $('.pc').each((pageIndex, page) => {
     });
   }
 });
+
+console.log(state.numerals);
