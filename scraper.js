@@ -27,6 +27,13 @@ let state = {
 // 1788 - 1812 - multiple numbers on a page, but uses () with all numbers
 // 1812 - 1860 - new format.  No ().  Multiple numbers to a page.  Brief entries.
 
+// TODO:20 Fix the greek word regex so that it doesnt pick up *** (or strip all *s)
+// TODO:0 remove Single line occurences of Greek and Latin
+// TODO:10 Fix the bug that makes last entry the first entry of next numeral.
+// TODO:30 Activate mongoose
+// TODO:40 Take output from parsing and record into monggDB
+// DONE:0 Fix bug that leaves out an entry before the next numeral
+
 // Filter through pages
 $('.pc').each((pageIndex, page) => {
   // 2-1787 - follows format of 1 number per page
@@ -63,6 +70,16 @@ $('.pc').each((pageIndex, page) => {
         if (!isEmpty(state.currentNumeral) && numeral) {
           // Reset the current properties
 
+          if (state.currentParagraph !== '') {
+            if (state.currentParagraph !== '') {
+              parseParagraph(state, updatedState => {
+                state = updatedState;
+              });
+              state.currentParagraph = '';
+            }
+          }
+
+
           if (!isEmpty(state.currentEntry)) {
             // push the updated entry into the current numeral
             state.currentNumeral.entries.push(state.currentEntry);
@@ -82,4 +99,4 @@ $('.pc').each((pageIndex, page) => {
   }
 });
 
-console.log(state.numerals);
+// console.log(state.numerals);

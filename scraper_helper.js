@@ -246,8 +246,8 @@ function parseParagraph(state, cb) {
 
     if (entryComment.content !== '') {
       entry.comments = [...entry.comments, entryComment];
-      entry.numeral = state.currentNumeral.value;
     }
+    entry.numeral = state.currentNumeral.value;
 
     // We now set the entry to the current entry on the state
     state.currentEntry = entry;
