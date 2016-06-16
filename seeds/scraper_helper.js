@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */
+ /* eslint no-unused-vars: 0 */
 /* eslint prefer-const: 0 */
 /* eslint no-else-return: 0 */
 
@@ -86,6 +86,9 @@ function parseWordEntry(sentence, cb) {
   // SINGLE HEBREW LETTER
   // check the first word to see if it is a match of a single hebrew letter
   const letterMatch = arr[0].match(singleHebrewRegex);
+
+  // Default language
+  entry.language = 'hebrew';
 
   if (letterMatch && letterMatch[0] !== '') {
     if (arr.length === 2) {
@@ -305,8 +308,23 @@ function parseParagraph(state, cb) {
   }
 }
 
+function cleanLine(line) {
+  // Trim all excess spaces
+  const cleanedLine = s(line).clean().value();
+  // First lets check for JUST the word Greek or Latin
+  const greekLatinRegex = new RegExp(/^Greek|Latin|Latin\/Greek|Greek\/Latin$/);
+  const greekLatinMatch = cleanedLine.match(greekLatinRegex);
+
+  if (greekLatinMatch && greekLatinMatch[0] !== '') {
+    return '';
+  }
+
+  return cleanedLine;
+}
+
 module.exports = Object.freeze({
   parseNumeral,
   parseParagraph,
+  cleanLine,
   isEmpty
 });

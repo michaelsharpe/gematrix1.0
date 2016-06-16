@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const Comment = require('./comment');
 
 const EntrySchema = new mongoose.Schema({
-  numeral: { type: mongoose.Schema.Types.ObjectId, ref: 'Numeral', required: true },
+  numeralId: { type: mongoose.Schema.Types.ObjectId, ref: 'Numeral', required: true },
   word: { type: 'String', required: true },
   language: { type: 'String', required: true },
-  pronunciation: { type: 'String', required: true },
-  alternateSpelling: { type: 'String', required: true },
+  pronunciation: { type: 'String' },
+  definition: { typr: 'String' },
   comments: [Comment.schema],
   see: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Numeral' }]
 });
@@ -14,11 +14,11 @@ const EntrySchema = new mongoose.Schema({
 function toJSON() {
   return {
     id: this.id,
-    numeral: this.numeral,
+    numeralId: this.numeral,
     word: this.word,
     language: this.language,
     pronunciation: this.pronunciation,
-    alternateSpelling: this.alternateSpelling,
+    definition: this.definition,
     comments: this.comments,
     see: this.see
   };

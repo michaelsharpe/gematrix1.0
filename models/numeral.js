@@ -7,6 +7,7 @@ const NumeralSchema = new mongoose.Schema({
   math: [{ type: String }],
   comments: [Comment.schema],
   entries: [Entry.schema],
+  see: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Numeral' }],
   createdAt: { type: Date, required: true, default: Date.now() },
   updatedAt: { type: Date, required: true, default: Date.now() }
 });
