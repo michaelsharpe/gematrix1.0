@@ -36,7 +36,7 @@ function createEntry(entry) {
       });
     }
 
-    ['language', 'word', 'language', 'pronciation', 'defintion', 'see', 'numeralId'].map(prop => {
+    ['language', 'word', 'language', 'pronunciation', 'defintion', 'see', 'numeralId'].map(prop => {
       if (entry.hasOwnProperty(prop)) {
         newEntry[prop] = entry[prop];
       }
@@ -112,13 +112,15 @@ function createNumeral({ numeral, updates }) {
 
 function seed() {
   // Main reading
-  fs.readFile('./numerals.json', 'utf8', (err, data) => {
+  fs.readFile('./seeds/numerals.json', 'utf8', (err, data) => {
     if (err) console.log('ERROR: ', err);
 
     const jsonData = JSON.parse(data);
     const numeralPromises = [];
 
     jsonData.forEach(rawNumeral => {
+      rawNumeral.entries.forEach(ent => {
+      });
       const numProm = createNumeral({
         numeral: new Numeral(),
         updates: rawNumeral

@@ -3,9 +3,20 @@ const router = express.Router();
 
 const numeralController = require('../controllers/numeral.controller');
 
+router.route('/')
+  .get((req, res) => {
+    res.json({
+      success: true,
+      message: 'Welcome to the G-Matrix'
+    });
+  });
+
 router.route('/numerals')
   .get(numeralController.getNumerals)
   .post(numeralController.postNumeral);
+
+router.route('/numerals/:value')
+  .get(numeralController.getValue);
 
 router.route('/numerals/:numeral_id')
   .get(numeralController.getNumeral)
@@ -13,11 +24,9 @@ router.route('/numerals/:numeral_id')
   .delete(numeralController.deleteNumeral);
 
 router.route('/numerals/:numeral_id/comments')
-  .get(numeralController.getNumeralComments)
   .post(numeralController.postNumeralComment);
 
 router.route('/numerals/:numeral_id/entries')
-  .get(numeralController.getNumeralEntries)
   .post(numeralController.postNumeralEntry);
 
 

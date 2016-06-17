@@ -18,7 +18,7 @@ function updateNumeral({ numeral, updates }) {
 
 function getNumerals(req, res, next) {
   Numeral
-    .find(req.query)
+    .find({})
     .then(numerals => {
       if (numerals.length === 0) {
         return next(createError({
@@ -27,37 +27,39 @@ function getNumerals(req, res, next) {
         }));
       }
 
-      let key = '';
-      let data = {};
-
-      if (numerals.length === 1) {
-        key = 'numeral';
-        data = {
-          id: numerals[0].id,
-          value: numerals[0].value,
-          comments: numerals[0].comments,
-          entries: numerals[0].entries,
-          createdAt: numerals[0].createdAt,
-          updatedAt: numerals[0].updatedAt
-        };
-      } else {
-        key = 'numerals';
-        data = numerals.map(num => {
+      res.json({
+        success: true,
+        numerals: numerals.map(num => {
           return {
             id: num.id,
             value: num.value,
             createdAt: num.createdAt,
             updatedAt: num.updatedAt
           };
-        });
+        })
+      });
+    })
+    .catch(next);
+}
+
+function getValue(req, res, next) {
+  const value = req.params.value;
+
+  Numeral
+    .find({ 'value': value })
+    .then(numeral => {
+      if (!numeral) {
+        return next(createError({
+          status: BAD_REQUEST,
+          message: `No numeral found with value ${value}`
+        }));
       }
 
       res.json({
         success: true,
-        [key]: data
+        numeral: numeral
       });
-    })
-    .catch(next);
+    });
 }
 
 function postNumeral(req, res, next) {
@@ -210,11 +212,10 @@ function postNumeralEntry(req, res, next) {
 module.exports = Object.freeze({
   getNumerals,
   postNumeral,
+  getValue,
   getNumeral,
   putNumeral,
   deleteNumeral,
-  getNumeralComments,
   postNumeralComment,
-  getNumeralEntries,
   postNumeralEntry
 });

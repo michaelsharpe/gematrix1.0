@@ -9,13 +9,15 @@ const CommentSchema = new mongoose.Schema({
   updatedAt: { type: Date, required: true, default: Date.now() }
 });
 
+const seeUrl = (num) => `/numerals/${num}`;
+
 function toJSON() {
   return {
     id: this.id,
     type: this.type,
     typeId: this.typeId,
     content: this.content,
-    see: this.see,
+    see: this.see.map(seeUrl),
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   };

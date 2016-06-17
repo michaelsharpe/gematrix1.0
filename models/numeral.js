@@ -3,7 +3,7 @@ const Entry = require('./entry');
 const Comment = require('./comment');
 
 const NumeralSchema = new mongoose.Schema({
-  value: { type: Number, required: true },
+  value: { type: Number, required: true, unique: true },
   math: [{ type: String }],
   comments: [Comment.schema],
   entries: [Entry.schema],

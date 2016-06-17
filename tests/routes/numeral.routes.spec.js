@@ -210,62 +210,6 @@ describe('Numeral Routes', () => {
     });
   });
 
-  describe('GET /numerals/:numeral_id/comments', () => {
-    const properties = [
-      'id',
-      'type',
-      'typeId',
-      'content',
-      'createdAt',
-      'updatedAt'
-    ];
-
-    it('should get all comments on a numeral', done => {
-      createNumeral(53)
-        .then(numeral => {
-          Comment.create({
-            type: 'numeral',
-            typeId: numeral.id,
-            content: 'Prime number.'
-          }, {
-            type: 'numeral',
-            typeId: numeral.id,
-            content: 'Number of degrees in one angle of the pythagorean triangle.'
-          })
-          .then((comment1, comment2) => {
-            numeral.comments = [
-              ...numeral.comments,
-              comment1,
-              comment2
-            ];
-
-            numeral.save()
-            .then(() => {
-              sendGet(`/numerals/${numeral.id}/comments`, (err, res) => {
-                handleErr(err);
-                console.log(res.body);
-                expectSuccess(res);
-                expect(res.body).to.have.property('comments');
-                expect(res.body.comments.length).to.equal(2);
-                const comment = res.body.comments[0];
-
-                properties.map(prop => {
-                  expect(comment).to.have.property(prop);
-                });
-
-                expect(comment.type).to.equal('numeral');
-                expect(comment.typeId).to.equal(numeral.id);
-                done();
-              });
-            })
-            .catch(handleErr);
-          })
-          .catch(handleErr);
-        })
-        .catch(handleErr);
-    });
-  });
-
   describe('POST /numerals/:numeral_id/comments', () => {
     it('should attach a comment to a specific numeral', done => {
       const data = {

@@ -7,9 +7,9 @@
     "node": "~6.0"
   },
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "nodemon ./bin/www",
     "test": "mocha --timeout 5000 --require ./tests/common --recursive ./tests",
-    "pfcSeed": "node ./scraper/pfc_seed.js"
+    "pfcSeed": "node ./seeds/pfc_seed.js"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -20,6 +20,7 @@
     "mongoose": "^4.4.20",
     "morgan": "^1.7.0",
     "mz": "^2.4.0",
+    "nodemon": "^1.9.2",
     "striptags": "^2.1.1",
     "underscore.string": "^3.3.4"
   },
