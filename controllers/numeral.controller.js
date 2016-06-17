@@ -190,7 +190,7 @@ function postNumeralComment(req, res, next) {
               success: true,
               message: `Comment successfully created on numeral ${savedNumeral.id}`,
               comment: comment
-            });  
+            });
           })
           .catch(next);
       })

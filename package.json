@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha --timeout 5000 --require ./tests/common --recursive ./tests"
+    "test": "mocha --timeout 5000 --require ./tests/common --recursive ./tests",
+    "pfcSeed": "node ./scraper/pfc_seed.js"
   },
   "dependencies": {
     "body-parser": "~1.13.2",

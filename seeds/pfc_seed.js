@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
-const fs = require('fs')
+const fs = require('fs');
 
 const config = require('../config');
 const Comment = require('../models/comment');
 const Entry = require('../models/entry');
 const Numeral = require('../models/numeral');
-let counter = 0;
 
 // MONGOOSE
 mongoose.Promise = Promise;
-mongoose.connect(config.db.test);
+mongoose.connect(config.db.toSeed);
 
 // Load the seed file
 
@@ -120,10 +119,6 @@ function seed() {
     const numeralPromises = [];
 
     jsonData.forEach(rawNumeral => {
-      rawNumeral.entries.forEach(num => {
-        // counter++;
-      })
-
       const numProm = createNumeral({
         numeral: new Numeral(),
         updates: rawNumeral
@@ -134,9 +129,13 @@ function seed() {
 
     Promise.all(numeralPromises)
       .then(numerals => {
+        console.log('*************************');
+        console.log(`${numerals.length} created.`);
+        console.log('*************************');
         setTimeout(() => {
+          console.log('Seed completed.');
           process.exit(0);
-        }, 4000);
+        }, 3000);
       })
       .catch(numErr => {
         console.log(numErr);

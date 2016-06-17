@@ -1,4 +1,4 @@
- /* eslint no-unused-vars: 0 */
+  /* eslint no-unused-vars: 0 */
 /* eslint prefer-const: 0 */
 /* eslint no-else-return: 0 */
 
@@ -14,7 +14,6 @@ function createNumeral() {
     math: [],
     comments: [],
     entries: [],
-    see: []
   };
 }
 
@@ -239,6 +238,7 @@ function parseParagraph(state, cb) {
       parseReferences(sentence, (sent, refs) => {
         if (refs) {
           entryComment.see = [...entryComment.see, ...refs];
+          // console.log(entryComment);
         } else {
           referencedParagraph.push(sent);
         }
@@ -291,6 +291,7 @@ function parseParagraph(state, cb) {
         parseReferences(sentence, (sent, refs) => {
           if (refs) {
             numeralComment.see = [...numeralComment.see, ...refs];
+            console.log(numeralComment.see);
           } else {
             numeralReferencedParagraph.push(sent);
           }

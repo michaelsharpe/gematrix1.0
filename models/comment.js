@@ -4,6 +4,7 @@ const CommentSchema = new mongoose.Schema({
   type: { type: String, required: true },
   typeId: { type: mongoose.Schema.Types.ObjectId, required: true },
   content: { type: String, required: true },
+  see: [{ type: Number }],
   createdAt: { type: Date, required: true, default: Date.now() },
   updatedAt: { type: Date, required: true, default: Date.now() }
 });
@@ -14,6 +15,7 @@ function toJSON() {
     type: this.type,
     typeId: this.typeId,
     content: this.content,
+    see: this.see,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   };

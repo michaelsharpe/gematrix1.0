@@ -6,9 +6,9 @@ const EntrySchema = new mongoose.Schema({
   word: { type: 'String', required: true },
   language: { type: 'String', required: true },
   pronunciation: { type: 'String' },
-  definition: { typr: 'String' },
+  definition: { type: 'String' },
   comments: [Comment.schema],
-  see: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Numeral' }]
+  see: [{ type: Number }]
 });
 
 function toJSON() {
