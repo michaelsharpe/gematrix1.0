@@ -7,7 +7,6 @@ const fs = require('fs');
 const mainPath = path.resolve(__dirname, 'app', 'main.js');
 
 module.exports = function() {
-
   // Fire up webpack and pass in the config
   let bundleStart = null;
   const compiler = webpack(webpackConfig);
