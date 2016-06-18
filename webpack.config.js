@@ -1,14 +1,19 @@
 const Webpack = require('webpack');
+
+// Postcss plugins
+const autoprefixer = require('autoprefixer');
+
+// Paths
 const path = require('path');
 const nodeMdulesPath = path.resolve(__dirname, 'node_modules');
-const buildPath = path.resolve(__dirname, 'public','build');
+const buildPath = path.resolve(__dirname, 'public', 'build');
 const mainPath = path.resolve(__dirname, 'app', 'main.js');
 
 const config = {
 
   // Make sure errors in console map to the correct file
   // and line number
-  devTool: 'eval-source-map',
+  devTool: 'inline-eval-cheap-source-map',
   entry: [
 
     // Hot style updates
@@ -33,6 +38,10 @@ const config = {
     // localhost:3000/build. That makes proxying easier to handle
     publicPath: '/build/'
   },
+  resolve: {
+    root: ['app'],
+    modulesDirectories: ['node_modules']
+  },
   module: {
 
     loaders: [
@@ -47,10 +56,12 @@ const config = {
 
       {
         test: /\.css$/,
-        loader: 'style!css'
+        loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
       }
     ]
   },
+  // post css plugins
+  postcss: () => [autoprefixer],
 
   // Manually add the Hot Replacement plugin when running from Node
   plugins: [new Webpack.HotModuleReplacementPlugin()]

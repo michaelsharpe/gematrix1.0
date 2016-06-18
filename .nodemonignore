@@ -1,0 +1,9 @@
+/node_modules/*
+/public/*
+/.git/*
+/.gitignore
+/package.json
+/README.md
+/app/*
+/.imdone/
+/webpack*
