@@ -16,9 +16,6 @@ router.route('/numerals')
   .post(numeralController.postNumeral);
 
 router.route('/numerals/:value')
-  .get(numeralController.getValue);
-
-router.route('/numerals/:numeral_id')
   .get(numeralController.getNumeral)
   .put(numeralController.putNumeral)
   .delete(numeralController.deleteNumeral);
@@ -28,6 +25,5 @@ router.route('/numerals/:numeral_id/comments')
 
 router.route('/numerals/:numeral_id/entries')
   .post(numeralController.postNumeralEntry);
-
 
 module.exports = router;

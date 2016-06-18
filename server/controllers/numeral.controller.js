@@ -7,7 +7,7 @@ const {
 
 function updateNumeral({ numeral, updates }) {
   // Sanitize updates for permitted props
-  ['value'].map(prop => {
+  ['value', 'math'].map(prop => {
     if (updates.hasOwnProperty(prop)) {
       numeral[prop] = updates[prop];
     }
@@ -42,11 +42,11 @@ function getNumerals(req, res, next) {
     .catch(next);
 }
 
-function getValue(req, res, next) {
+function getNumeral(req, res, next) {
   const value = req.params.value;
 
   Numeral
-    .find({ 'value': value })
+    .findOne({ 'value': value })
     .then(numeral => {
       if (!numeral) {
         return next(createError({
@@ -59,7 +59,8 @@ function getValue(req, res, next) {
         success: true,
         numeral: numeral
       });
-    });
+    })
+    .catch(next);
 }
 
 function postNumeral(req, res, next) {
@@ -78,33 +79,16 @@ function postNumeral(req, res, next) {
   .catch(next);
 }
 
-function getNumeral(req, res, next) {
-  Numeral
-    .findById(req.params.numeral_id)
-    .then(numeral => {
-      if (!numeral) {
-        return next(createError({
-          status: BAD_REQUEST,
-          message: `Unable to find numeral with id ${req.params.numeral_id}`
-        }));
-      }
-
-      res.json({
-        success: true,
-        message: 'Numeral found',
-        numeral: numeral
-      });
-    })
-    .catch(next);
-}
-
 function putNumeral(req, res, next) {
-  Numeral.findById(req.params.numeral_id)
+  const value = req.params.value;
+
+  Numeral
+    .findOne(value)
     .then(numeral => {
       if (!numeral) {
         return next(createError({
           status: BAD_REQUEST,
-          message: `No numeral found with id ${req.params.numeral_id}`
+          message: `No numeral found with value ${value}`
         }));
       }
 
@@ -112,27 +96,28 @@ function putNumeral(req, res, next) {
         numeral,
         updates: req.body
       })
-        .save()
-        .then(updatedNumeral => {
-          res.json({
-            success: true,
-            message: 'Numeral updated',
-            numeral: updatedNumeral
-          });
-        })
-        .catch(next);
+      .save()
+      .then(updatedNumeral => {
+        res.json({
+          success: true,
+          message: 'Numeral updated',
+          numeral: updatedNumeral
+        });
+      })
+      .catch(next);
     })
     .catch(next);
 }
 
 function deleteNumeral(req, res, next) {
+  const value = req.params.value;
   Numeral
-    .findById(req.params.numeral_id)
+    .findOne(value)
     .then(numeral => {
       if (!numeral) {
         return next(createError({
           status: BAD_REQUEST,
-          message: `No numeral found with id ${req.params.numeral_id}`
+          message: `No numeral found with value ${value}`
         }));
       }
 
@@ -144,25 +129,6 @@ function deleteNumeral(req, res, next) {
           });
         })
         .catch(next);
-    })
-    .catch(next);
-}
-
-function getNumeralComments(req, res, next) {
-  Numeral
-    .findById(req.params.numeral_id)
-    .then(numeral => {
-      if (!numeral) {
-        return next(createError({
-          status: BAD_REQUEST,
-          message: `No numeral found with id ${req.params.numeral_id}`
-        }));
-      }
-
-      res.json({
-        success: true,
-        comments: numeral.comments
-      });
     })
     .catch(next);
 }
@@ -212,7 +178,7 @@ function postNumeralEntry(req, res, next) {
 module.exports = Object.freeze({
   getNumerals,
   postNumeral,
-  getValue,
+  getNumeral,
   getNumeral,
   putNumeral,
   deleteNumeral,

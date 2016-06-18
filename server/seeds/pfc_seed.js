@@ -36,7 +36,7 @@ function createEntry(entry) {
       });
     }
 
-    ['language', 'word', 'language', 'pronunciation', 'defintion', 'see', 'numeralId'].map(prop => {
+    ['language', 'word', 'language', 'pronunciation', 'definition', 'see', 'numeralId'].map(prop => {
       if (entry.hasOwnProperty(prop)) {
         newEntry[prop] = entry[prop];
       }

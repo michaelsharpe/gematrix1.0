@@ -3,7 +3,7 @@ const Comment = require('./comment');
 
 const EntrySchema = new mongoose.Schema({
   numeralId: { type: mongoose.Schema.Types.ObjectId, ref: 'Numeral', required: true },
-  word: { type: 'String', required: true, unique: true },
+  word: { type: 'String', required: true },
   language: { type: 'String', required: true },
   pronunciation: { type: 'String' },
   definition: { type: 'String' },
@@ -11,9 +11,7 @@ const EntrySchema = new mongoose.Schema({
   see: [{ type: Number }]
 });
 
-function seeUrl(num) {
-  return `/numerals/${num}`;
-}
+const seeUrl = (num) => `/numerals/${num}`;
 
 function toJSON() {
   return {

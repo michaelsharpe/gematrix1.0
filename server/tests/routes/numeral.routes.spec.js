@@ -63,15 +63,18 @@ describe('Numeral Routes', () => {
         })
         .catch(handleErr);
     });
+  });
 
-    it('should return a single result of a query for a specific number', done => {
+  describe('GET /numerals/:value', () => {
+    it('should return a numeral with the given value if it exists', done => {
       const createNumerals = [1, 2, 3, 4, 5, 6, 7, 8, 216].map(val => createNumeral(val));
       const properties = ['id', 'value', 'createdAt', 'updatedAt', 'entries', 'comments'];
       const value = 216;
 
       Promise.all(createNumerals)
         .then(numerals => {
-          sendGet(`/numerals?value=${value}`, (err, res) => {
+          sendGet(`/numerals/${value}`, (err, res) => {
+            console.log(res.body);
             handleErr(err);
             expectSuccess(res);
 
