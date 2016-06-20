@@ -8,8 +8,9 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon ./bin/www",
+    "start:client": "NODE_ENV=development nodemon ./client/server.js",
     "test:server": "mocha --timeout 5000 --require ./server/tests/common --recursive ./server/tests",
-    "test:client": "mocha --compilers js:babel-core/register --require ./test/setup.js 'app/**/*spec.js'",
+    "test:client": "mocha --compilers js:babel-core/register --require ./test/setup.js 'client/**/*spec.js'",
     "pfcSeed": "node ./server/seeds/pfc_seed.js"
   },
   "dependencies": {

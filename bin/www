@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const app = require('../server/app');
+const app = require('../server/server');
 const debug = require('debug')('gematrix:server');
 const http = require('http');
 

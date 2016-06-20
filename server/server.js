@@ -5,8 +5,6 @@ const cors = require('cors');
 const logger = require('morgan');
 
 const config = require('../config/server.js');
-const webpack = require('webpack');
-const webpackDevConfig = require('../webpack.dev.config');
 
 // APP CONFIG
 const app = express();
@@ -30,20 +28,6 @@ mongoose.connect(config.db.server);
 // On the production server, this is handled by nginx.
 if (process.env.NODE_ENV === ('development' || 'test')) {
   app.use('/', express.static(`${ __dirname }/../public`));
-}
-
-/**
- * Webpack bundler
- */
-
-if (process.env.NODE_ENV === 'development') {
-  const compiler = webpack(webpackDevConfig);
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: webpackDevConfig.output.publicPath
-  }));
-
-  app.use(require('webpack-hot-middleware')(compiler));
 }
 
 // ROUTES

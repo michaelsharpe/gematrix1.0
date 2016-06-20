@@ -7,8 +7,8 @@ const autoprefixer = require('autoprefixer');
 const path = require('path');
 const nodeModulesPath = path.resolve(__dirname, 'node_modules');
 const buildPath = path.resolve(__dirname, 'public', 'build');
-const mainPath = path.resolve(__dirname, 'app', 'index');
-const appPath = path.resolve(__dirname, 'app');
+const mainPath = path.resolve(__dirname, 'client', 'index');
+const clientPath = path.resolve(__dirname, 'client');
 
 const config = {
   devTool: 'inline-eval-cheap-source-map',
@@ -23,7 +23,7 @@ const config = {
     publicPath: '/build/'
   },
   resolve: {
-    root: ['app'],
+    root: ['client'],
     modulesDirectories: ['node_modules'],
     extensions: ['', '.js', '.jsx']
   },
@@ -33,7 +33,7 @@ const config = {
       {
         test: /\.jsx?$/,
         loaders: ['babel'],
-        include: appPath,
+        include: clientPath,
         exclude: nodeModulesPath
       },
 

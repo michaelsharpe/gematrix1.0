@@ -4,6 +4,7 @@ import {
   FAIL_NUMERALS
 } from '../constants/actionTypes';
 
+import config from '../../config/client';
 import { get } from 'superagent';
 
 const requestNumerals = () => {
@@ -29,7 +30,7 @@ export const fetchNumerals = () => {
   return dispatch => {
     dispatch(requestNumerals());
 
-    get('/numerals')
+    get(`${config.api}/numerals`)
     .type('application/json')
     .accept('application/json')
     .end((err, res) => {
