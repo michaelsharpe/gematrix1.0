@@ -1,0 +1,4 @@
+// Numerals
+export const REQUEST_NUMERALS = 'REQUEST_NUMERALS';
+export const RECEIVE_NUMERALS = 'RECEIVE_NUMERALS';
+export const FAIL_NUMERALS = 'FAIL_NUMERALS';

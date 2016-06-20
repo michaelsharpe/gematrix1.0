@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon ./bin/www",
-    "test": "mocha --timeout 5000 --require ./server/tests/common --recursive ./server/tests",
+    "test:server": "mocha --timeout 5000 --require ./server/tests/common --recursive ./server/tests",
+    "test:client": "mocha --compilers js:babel-core/register --require ./test/setup.js 'app/**/*spec.js'",
     "pfcSeed": "node ./server/seeds/pfc_seed.js"
   },
   "dependencies": {
@@ -24,7 +25,12 @@
     "nodemon": "^1.9.2",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.4.1",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
     "striptags": "^2.1.1",
+    "superagent": "^2.0.0",
     "underscore.string": "^3.3.4"
   },
   "devDependencies": {
@@ -49,6 +55,8 @@
     "supertest": "^1.2.0",
     "supertest-as-promised": "^3.1.0",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-hot-middleware": "^2.10.0"
   }
 }

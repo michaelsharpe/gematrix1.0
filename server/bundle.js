@@ -6,7 +6,7 @@ const fs = require('fs');
 
 const mainPath = path.resolve(__dirname, 'app', 'main.js');
 
-module.exports = function() {
+module.exports = function () {
   // Fire up webpack and pass in the config
   let bundleStart = null;
   const compiler = webpack(webpackConfig);
@@ -42,6 +42,6 @@ module.exports = function() {
   // We fire up the development server and give notice in the terminal
   // that we are starting the initial bundle
   bundler.listen(8080, 'localhost', () => {
-    console.log('Bundling the Project, sir. Please wait...')
-  })
-}
+    console.log('Bundling the Project, sir. Please wait...');
+  });
+};

@@ -5,6 +5,8 @@ const cors = require('cors');
 const logger = require('morgan');
 
 const config = require('../config/server.js');
+const webpack = require('webpack');
+const webpackDevConfig = require('../webpack.dev.config');
 
 // APP CONFIG
 const app = express();
@@ -30,32 +32,22 @@ if (process.env.NODE_ENV === ('development' || 'test')) {
   app.use('/', express.static(`${ __dirname }/../public`));
 }
 
-// ROUTES
-const numeralRoutes = require('./routes/numeral.routes');
-
-
 /**
  * Webpack bundler
  */
-const httpProxy = require('http-proxy');
-const proxy = httpProxy.createProxyServer();
 
 if (process.env.NODE_ENV === 'development') {
-  const bundle = require('../server/bundle');
-  bundle();
+  const compiler = webpack(webpackDevConfig);
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: webpackDevConfig.output.publicPath
+  }));
 
-  // Forward all requests to /build to the webpack server
-  app.all('/build/*', (req, res) => {
-    proxy.web(req, res, {
-      target: 'http://localhost:8080'
-    });
-  });
+  app.use(require('webpack-hot-middleware')(compiler));
 }
 
-proxy.on('error', () => {
-  console.log('Could not connect to proxy, please try again...');
-});
-
+// ROUTES
+const numeralRoutes = require('./routes/numeral.routes');
 
 app.use('/', [
   numeralRoutes

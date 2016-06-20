@@ -13,9 +13,8 @@ const appPath = path.resolve(__dirname, 'app');
 const config = {
   devTool: 'inline-eval-cheap-source-map',
   entry: [
+    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
     mainPath
   ],
   output: {
@@ -45,7 +44,11 @@ const config = {
     ]
   },
   postcss: () => [autoprefixer],
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
+  ]
 };
 
 module.exports = config;
