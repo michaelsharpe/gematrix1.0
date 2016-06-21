@@ -2,14 +2,26 @@
 import { connect } from 'react-redux';
 import Numerals from '../components/Numerals';
 
-function mapStateToProps(state) {
-  console.log('map state to props');
-  console.log(state);
-  return {
-    numerals: state.numeralReducer.numerals,
-    fetching: state.numeralReducer.fetching
-  };
-}
+import {
+  getInitialNumerals,
+  nextNumeralPage,
+  prevNumeralPage
+ } from '../actions/numeralActions';
 
+const mapStateToProps = state => ({
+  numerals: state.numerals.pages,
+  api: state.numerals.api
+});
 
-export default connect(mapStateToProps)(Numerals);
+const mapDispatchToProps = dispatch => ({
+  getInitialNumerals: () => dispatch(getInitialNumerals()),
+  onClickPrevPage: () => dispatch(prevNumeralPage()),
+  onClickNextPage: () => dispatch(nextNumeralPage())
+});
+
+const NumeralContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Numerals);
+
+export default NumeralContainer;

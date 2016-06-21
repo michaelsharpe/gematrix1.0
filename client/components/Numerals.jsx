@@ -1,33 +1,31 @@
 import React, { PropTypes, Component } from 'react';
-import { fetchNumerals } from '../actions/numeralActions';
-
 
 class Numerals extends Component {
   componentWillMount() {
-    this.props.dispatch(fetchNumerals());
+    this.props.getInitialNumerals();
   }
 
   render() {
-    let nums = [];
-    if (this.props.numerals.length !== 0) {
-      nums = this.props.numerals.map((numeral, i) => (
-        <li key={i}>
-          {numeral.value}
-        </li>
-      ));
-    }
+    const { pageList } = this.props.numerals;
+    const nums = pageList.map((numeral, i) => (<li key={i}>{numeral.value}</li>));
     return (
-      <ul>
-        {nums}
-      </ul>
+      <div>
+        <button onClick={this.props.onClickPrevPage}>Previous Page</button>
+        <button onClick={this.props.onClickNextPage}>Next Page</button>
+        <ul>
+          {nums}
+        </ul>
+      </div>
     );
   }
 }
 
 Numerals.propTypes = {
-  dispatch: PropTypes.func,
-  numerals: PropTypes.array,
-  fetching: PropTypes.bool
+  getInitialNumerals: PropTypes.func,
+  onClickNextPage: PropTypes.func,
+  onClickPrevPage: PropTypes.func,
+  numerals: PropTypes.object,
+  api: PropTypes.object
 };
 
 export default Numerals;

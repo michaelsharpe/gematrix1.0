@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import numeralReducer from './numeralReducer';
+import numerals from './numerals';
 
 const rootReducer = combineReducers({
-  numeralReducer
+  numerals
 });
 
 export default rootReducer;

@@ -4,6 +4,6 @@
 /.gitignore
 /package.json
 /README.md
-/app/*
+/client/*
 /.imdone/
 /webpack*
