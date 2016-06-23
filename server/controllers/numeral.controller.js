@@ -19,6 +19,7 @@ function updateNumeral({ numeral, updates }) {
 function getNumerals(req, res, next) {
   Numeral
     .find({})
+    .lean()
     .then(numerals => {
       if (numerals.length === 0) {
         return next(createError({
@@ -29,14 +30,7 @@ function getNumerals(req, res, next) {
 
       res.json({
         success: true,
-        numerals: numerals.map(num => {
-          return {
-            id: num.id,
-            value: num.value,
-            createdAt: num.createdAt,
-            updatedAt: num.updatedAt
-          };
-        })
+        numerals: numerals
       });
     })
     .catch(next);

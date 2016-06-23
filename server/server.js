@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const logger = require('morgan');
+const compress = require('compression');
 
 const config = require('../config/server.js');
 
@@ -17,8 +18,10 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
 
+app.use(compress());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 // MONGOOSE
 mongoose.Promise = Promise;

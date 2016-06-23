@@ -3,42 +3,27 @@ import {
   FAIL_NUMERALS,
   RECEIVE_NUMERALS,
   SET_NUMERALS,
-  GOTO_NUMERAL_PAGE,
-  NEXT_NUMERAL_PAGE,
-  PREV_NUMERAL_PAGE,
-  SORT_NUMERALS,
-  FILTER_NUMERALS
-} from '../constants/actionTypes';
-
-import { combineReducers } from 'redux';
-import paginated from 'paginated-redux';
+  FIND_NUMERAL,
+  TOGGLE_SEARCH
+} from 'constants/actionTypes';
 
 const initialState = {
   fetching: false,
-  received: false
+  received: false,
+  numeralCache: [],
+  searchResults: [],
+  searchOpen: false
 };
 
-const numeralList = (state = [], action) => {
+const findNumeral = (nums, value) => nums.filter(num => num.value === value);
+
+const numerals = (state = initialState, action) => {
   switch (action.type) {
   case SET_NUMERALS:
-    return action.numerals;
-  default:
-    return state;
-  }
-};
-
-const pages = paginated(numeralList, {
-  GOTO_PAGE: GOTO_NUMERAL_PAGE,
-  NEXT_PAGE: NEXT_NUMERAL_PAGE,
-  PREV_PAGE: PREV_NUMERAL_PAGE,
-  FILTER: FILTER_NUMERALS,
-  SORT: SORT_NUMERALS
-}, {
-  defaultSortBy: 'value'
-});
-
-const api = (state = initialState, action) => {
-  switch (action.type) {
+    return {
+      ...state,
+      numeralCache: action.numerals
+    };
   case REQUEST_NUMERALS:
     return {
       ...state,
@@ -55,14 +40,20 @@ const api = (state = initialState, action) => {
       ...state,
       fetching: false
     };
+  case FIND_NUMERAL:
+    const searchResults = findNumeral(state.numeralCache, action.numeral);
+    return {
+      ...state,
+      searchResults
+    };
+  case TOGGLE_SEARCH:
+    return {
+      ...state,
+      searchOpen: !state.searchOpen
+    };
   default:
     return state;
   }
 };
 
-const numeralReducer = combineReducers({
-  api,
-  pages
-});
-
-export default numeralReducer;
+export default numerals;

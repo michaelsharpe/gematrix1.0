@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-import configureStore from './store';
+import configureStore from 'store';
 
 // Pages
 import App from './containers/AppContainer';
-import NumeralList from './containers/NumeralContainer';
+import Numerals from './containers/NumeralContainer';
 
 const store = configureStore();
 
@@ -23,7 +23,7 @@ export default class Root extends Component {
       <Provider store={store} >
         <Router history={browserHistory}>
           <Route path="/" component={App}>
-            <IndexRoute component={NumeralList}/>
+            <IndexRoute component={Numerals}/>
           </Route>
         </Router>
       </Provider>

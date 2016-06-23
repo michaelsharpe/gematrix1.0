@@ -2,11 +2,14 @@ import { AppContainer } from 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Root from './Root';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');
 ReactDOM.render(
   <AppContainer>
-    <Root />
+    <Root/>
   </AppContainer>,
   rootEl
 );

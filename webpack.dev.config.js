@@ -11,7 +11,7 @@ const mainPath = path.resolve(__dirname, 'client', 'index');
 const clientPath = path.resolve(__dirname, 'client');
 
 const config = {
-  devTool: 'inline-eval-cheap-source-map',
+  devTool: 'source-map',
   entry: [
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
     'react-hot-loader/patch',
@@ -23,12 +23,11 @@ const config = {
     publicPath: '/build/'
   },
   resolve: {
-    root: ['client'],
+    root: path.resolve('./client'),
     modulesDirectories: ['node_modules'],
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx', '.scss', '.css']
   },
   module: {
-
     loaders: [
       {
         test: /\.jsx?$/,
@@ -37,8 +36,11 @@ const config = {
         exclude: nodeModulesPath
       },
       {
-        test: /\.css$/,
-        loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
+        test: /(\.scss|\.css)$/,
+        loaders: [
+          'style?sourceMap',
+          'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader!sass'
+        ]
       }
     ]
   },

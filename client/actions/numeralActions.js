@@ -3,10 +3,9 @@ import {
   RECEIVE_NUMERALS,
   SET_NUMERALS,
   FAIL_NUMERALS,
-  GOTO_NUMERAL_PAGE,
-  NEXT_NUMERAL_PAGE,
-  PREV_NUMERAL_PAGE
-} from '../constants/actionTypes';
+  FIND_NUMERAL,
+  TOGGLE_SEARCH
+} from 'constants/actionTypes';
 
 import config from '../../config/client';
 import { get } from 'superagent';
@@ -36,17 +35,13 @@ const failNumerals = () => ({
   type: FAIL_NUMERALS
 });
 
-export const gotoNumeralPage = page => ({
-  type: GOTO_NUMERAL_PAGE,
-  page
+export const findNumeral = numeral => ({
+  type: FIND_NUMERAL,
+  numeral
 });
 
-export const nextNumeralPage = () => ({
-  type: NEXT_NUMERAL_PAGE
-});
-
-export const prevNumeralPage = () => ({
-  type: PREV_NUMERAL_PAGE
+export const toggleSearch = () => ({
+  type: TOGGLE_SEARCH
 });
 
 export const getInitialNumerals = () => {
@@ -60,8 +55,7 @@ export const getInitialNumerals = () => {
     .end((err, res) => {
       try {
         dispatch(receiveNumerals())
-        .then(() => dispatch(setNumerals(res.body.numerals)))
-        .then(() => dispatch(gotoNumeralPage(1)));
+        .then(() => dispatch(setNumerals(res.body.numerals)));
       } catch (e) {
         console.log('GET request to /numerals failed.');
         dispatch(failNumerals());
