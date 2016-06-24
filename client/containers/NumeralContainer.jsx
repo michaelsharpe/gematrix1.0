@@ -3,15 +3,10 @@ import { connect } from 'react-redux';
 
 // UI
 import { Layout, Panel } from 'react-toolbox';
-import SearchDrawer from 'components/SearchDrawer';
+import SearchList from 'components/SearchList';
 
 // Actions
-import {
-  getInitialNumerals,
-  nextNumeralPage,
-  prevNumeralPage,
-  findNumeral
- } from 'actions/numeralActions';
+import { getInitialNumerals, findNumeral } from 'actions/numeralActions';
 
 class Numerals extends Component {
   constructor(props) {
@@ -31,19 +26,14 @@ class Numerals extends Component {
   }
 
   render() {
-    const { searchResults, searchOpen } = this.props;
-    const results = searchResults.map((numeral, i) => (<li key={i}>{numeral.value}</li>));
+    const { currentNumeral } = this.props;
+
     return (
       <Layout>
-        <SearchDrawer searchOpen={searchOpen}>
-          testing
-        </SearchDrawer>
-
         <Panel>
-          <input type="text" onKeyPress={this.handleKeyPress}/>
-          <ul>
-            {results}
-          </ul>
+          <input onKeyUp={this.handleKeyPress} type="text"/>
+          <br/>
+          <SearchList numeral={currentNumeral}/>
         </Panel>
       </Layout>
     );
@@ -51,23 +41,18 @@ class Numerals extends Component {
 }
 
 Numerals.propTypes = {
+  currentNumeral: PropTypes.object,
   getInitialNumerals: PropTypes.func,
-  onClickNextPage: PropTypes.func,
-  onClickPrevPage: PropTypes.func,
   findNumeral: PropTypes.func,
-  searchResults: PropTypes.array,
   searchOpen: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
-  searchResults: state.numerals.searchResults,
-  searchOpen: state.numerals.searchOpen
+  currentNumeral: state.numerals.currentNumeral
 });
 
 const mapDispatchToProps = dispatch => ({
   getInitialNumerals: () => dispatch(getInitialNumerals()),
-  onClickPrevPage: () => dispatch(prevNumeralPage()),
-  onClickNextPage: () => dispatch(nextNumeralPage()),
   findNumeral: numeral => dispatch(findNumeral(numeral))
 });
 

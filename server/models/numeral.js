@@ -15,6 +15,7 @@ function toJSON() {
   return {
     id: this.id,
     value: this.value,
+    math: this.math,
     comments: this.comments,
     entries: this.entries,
     createdAt: this.createdAt,

@@ -16,7 +16,7 @@ const seeUrl = (num) => `/numerals/${num}`;
 function toJSON() {
   return {
     id: this.id,
-    numeralId: this.numeral,
+    numeralId: this.numeralId,
     word: this.word,
     language: this.language,
     pronunciation: this.pronunciation,

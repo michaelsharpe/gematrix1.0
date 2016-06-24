@@ -12,10 +12,11 @@ const initialState = {
   received: false,
   numeralCache: [],
   searchResults: [],
-  searchOpen: false
+  searchOpen: false,
+  currentNumeral: undefined
 };
 
-const findNumeral = (nums, value) => nums.filter(num => num.value === value);
+const findNumeral = (nums, value) => nums.filter(num => num.value === value)[0];
 
 const numerals = (state = initialState, action) => {
   switch (action.type) {
@@ -41,15 +42,10 @@ const numerals = (state = initialState, action) => {
       fetching: false
     };
   case FIND_NUMERAL:
-    const searchResults = findNumeral(state.numeralCache, action.numeral);
+    const foundNumeral = findNumeral(state.numeralCache, action.numeral);
     return {
       ...state,
-      searchResults
-    };
-  case TOGGLE_SEARCH:
-    return {
-      ...state,
-      searchOpen: !state.searchOpen
+      currentNumeral: foundNumeral
     };
   default:
     return state;
