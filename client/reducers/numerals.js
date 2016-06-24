@@ -4,8 +4,8 @@ import {
   RECEIVE_NUMERALS,
   SET_NUMERALS,
   FIND_NUMERAL,
-  TOGGLE_SEARCH
-} from 'constants/actionTypes';
+  CURRENT_DETAILS
+} from 'constants/actionTypes'
 
 const initialState = {
   fetching: false,
@@ -13,10 +13,11 @@ const initialState = {
   numeralCache: [],
   searchResults: [],
   searchOpen: false,
-  currentNumeral: undefined
-};
+  currentNumeral: undefined,
+  currentDetails: undefined
+}
 
-const findNumeral = (nums, value) => nums.filter(num => num.value === value)[0];
+const findNumeral = (nums, value) => nums.filter(num => num.value === value)[0]
 
 const numerals = (state = initialState, action) => {
   switch (action.type) {
@@ -24,32 +25,37 @@ const numerals = (state = initialState, action) => {
     return {
       ...state,
       numeralCache: action.numerals
-    };
+    }
   case REQUEST_NUMERALS:
     return {
       ...state,
       fetching: true,
       received: true
-    };
+    }
   case RECEIVE_NUMERALS:
     return {
       ...state,
       fetching: false
-    };
+    }
   case FAIL_NUMERALS:
     return {
       ...state,
       fetching: false
-    };
+    }
   case FIND_NUMERAL:
-    const foundNumeral = findNumeral(state.numeralCache, action.numeral);
+    const foundNumeral = findNumeral(state.numeralCache, action.numeral)
     return {
       ...state,
       currentNumeral: foundNumeral
-    };
+    }
+  case CURRENT_DETAILS:
+    return {
+      ...state,
+      currentDetails: action.details
+    }
   default:
-    return state;
+    return state
   }
-};
+}
 
-export default numerals;
+export default numerals

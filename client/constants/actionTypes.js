@@ -6,4 +6,5 @@ export const FAIL_NUMERALS = 'FAIL_NUMERALS';
 export const FIND_NUMERAL = 'FIND_NUMERAL';
 
 // UI
-export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
+export const TOGGLE_DETAILS = 'TOGGLE_DETAILS';
+export const CURRENT_DETAILS = 'CURRENT_DETAILS';

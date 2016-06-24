@@ -1,3 +1,4 @@
 export default {
-  RTAppBar: require('./appBar.scss')
+  RTAppBar: require('./appBar.scss'),
+  RTLayout: require('./layout.scss')
 };

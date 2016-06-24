@@ -1,25 +1,28 @@
-import React, { PropTypes, Component } from 'react';
-import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox';
-import EntryItem from 'components/EntryItem';
+import React, { PropTypes, Component } from 'react'
+import { List, ListSubHeader, ListDivider } from 'react-toolbox'
+import EntryItem from 'components/EntryItem'
+import NumeralItem from 'components/NumeralItem'
 
 class SearchList extends Component {
+  constructor(props) {
+    super(props)
+    this.onEntryClick = this.onEntryClick.bind(this)
+    this.onNumeralClick = this.onNumeralClick.bind(this)
+  }
+
   onEntryClick(entry) {
-    console.log(entry);
+    this.props.setDetails(entry)
+  }
+
+  onNumeralClick(numeral) {
+    this.props.setDetails(numeral)
   }
 
   render() {
-    const { numeral } = this.props;
-    const math = numeral.math.length > 0 ? numeral.math[0] : '';
-
-    const number = (
-      <ListItem caption={numeral.value.toString()}
-          legend={math}
-          rightIcon={numeral.default ? '' : 'chevron_right'}/>
-    );
-
+    const { numeral } = this.props
     const entries = numeral.entries.map((entry, i)=> (
       <EntryItem key={i} entry={entry} onClick={this.onEntryClick}/>
-    ));
+    ))
 
     return (
       <List ripple={true} selectable={true}>
@@ -28,7 +31,7 @@ class SearchList extends Component {
           <div>
             <ListSubHeader caption="Number"/>
             <ListDivider/>
-            {number}
+            <NumeralItem numeral={numeral} onClick={this.onNumeralClick}/>
           </div>
         }
 
@@ -40,13 +43,14 @@ class SearchList extends Component {
           </div>
         }
       </List>
-    );
+    )
   }
 }
 
 SearchList.propTypes = {
-  numeral: PropTypes.object
-};
+  numeral: PropTypes.object,
+  setDetails: PropTypes.func
+}
 
 SearchList.defaultProps = {
   numeral: {
@@ -59,6 +63,6 @@ SearchList.defaultProps = {
       default: true
     }]
   }
-};
+}
 
-export default SearchList;
+export default SearchList

@@ -1,64 +1,54 @@
-import React, { PropTypes, Component } from 'react';
-import { connect } from 'react-redux';
+import React, { PropTypes, Component } from 'react'
+import { connect } from 'react-redux'
 
 // UI
-import { Layout, Panel } from 'react-toolbox';
-import SearchList from 'components/SearchList';
+import { Layout, Panel, Sidebar, IconButton } from 'react-toolbox'
+import Search from 'containers/SearchContainer'
 
 // Actions
-import { getInitialNumerals, findNumeral } from 'actions/numeralActions';
+import { getInitialNumerals } from 'actions/numeralActions'
 
 class Numerals extends Component {
-  constructor(props) {
-    super(props);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-  }
-
   componentWillMount() {
-    this.props.getInitialNumerals();
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      const numeral = e.currentTarget.value;
-      this.props.findNumeral(+numeral);
-    }
+    this.props.getInitialNumerals()
   }
 
   render() {
-    const { currentNumeral } = this.props;
-
     return (
       <Layout>
-        <Panel>
-          <input onKeyUp={this.handleKeyPress} type="text"/>
-          <br/>
-          <SearchList numeral={currentNumeral}/>
+        <Panel scrollY={true}>
+          <Search />
         </Panel>
+
+        <Sidebar
+          pinned={true}
+          width={50}>
+            <div><IconButton icon="close"/></div>
+            <div style={{ flex: 1 }}>
+                <p>Supplemental content goes here.</p>
+            </div>
+        </Sidebar>
       </Layout>
-    );
+    )
   }
 }
 
 Numerals.propTypes = {
-  currentNumeral: PropTypes.object,
-  getInitialNumerals: PropTypes.func,
-  findNumeral: PropTypes.func,
+  getInitialNumerals: PropTypes.func.isRequired,
   searchOpen: PropTypes.bool
-};
+}
 
 const mapStateToProps = state => ({
-  currentNumeral: state.numerals.currentNumeral
-});
+
+})
 
 const mapDispatchToProps = dispatch => ({
-  getInitialNumerals: () => dispatch(getInitialNumerals()),
-  findNumeral: numeral => dispatch(findNumeral(numeral))
-});
+  getInitialNumerals: () => dispatch(getInitialNumerals())
+})
 
 const NumeralContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Numerals);
+)(Numerals)
 
-export default NumeralContainer;
+export default NumeralContainer
