@@ -3,8 +3,10 @@ import {
   FAIL_NUMERALS,
   RECEIVE_NUMERALS,
   SET_NUMERALS,
-  FIND_NUMERAL,
-  CURRENT_DETAILS
+  SET_CURRENT_NUMERAL,
+  CURRENT_DETAILS,
+  CLOSE_DETAILS,
+  OPEN_DETAILS
 } from 'constants/actionTypes'
 
 const initialState = {
@@ -12,12 +14,13 @@ const initialState = {
   received: false,
   numeralCache: [],
   searchResults: [],
-  searchOpen: false,
   currentNumeral: undefined,
-  currentDetails: undefined
+  detailsOpen: true,
+  currentDetails: {
+    type: undefined,
+    details: undefined
+  }
 }
-
-const findNumeral = (nums, value) => nums.filter(num => num.value === value)[0]
 
 const numerals = (state = initialState, action) => {
   switch (action.type) {
@@ -42,16 +45,29 @@ const numerals = (state = initialState, action) => {
       ...state,
       fetching: false
     }
-  case FIND_NUMERAL:
-    const foundNumeral = findNumeral(state.numeralCache, action.numeral)
+  case SET_CURRENT_NUMERAL:
     return {
       ...state,
-      currentNumeral: foundNumeral
+      currentNumeral: action.numeral
+    }
+  case CLOSE_DETAILS:
+    return {
+      ...state,
+      detailsOpen: false
+    }
+  case OPEN_DETAILS:
+    return {
+      ...state,
+      detailsOpen: true
     }
   case CURRENT_DETAILS:
+    const { type, details } = action.details
     return {
       ...state,
-      currentDetails: action.details
+      currentDetails: {
+        type,
+        details
+      }
     }
   default:
     return state

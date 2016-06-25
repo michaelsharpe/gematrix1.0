@@ -2,8 +2,9 @@ import React, { PropTypes, Component } from 'react'
 import { connect } from 'react-redux'
 
 // UI
-import { Layout, Panel, Sidebar, IconButton } from 'react-toolbox'
+import { Layout, Panel, Sidebar } from 'react-toolbox'
 import Search from 'containers/SearchContainer'
+import Details from 'containers/DetailsContainer'
 
 // Actions
 import { getInitialNumerals } from 'actions/numeralActions'
@@ -21,12 +22,9 @@ class Numerals extends Component {
         </Panel>
 
         <Sidebar
-          pinned={true}
+          pinned={this.props.detailsOpen}
           width={50}>
-            <div><IconButton icon="close"/></div>
-            <div style={{ flex: 1 }}>
-                <p>Supplemental content goes here.</p>
-            </div>
+            <Details />
         </Sidebar>
       </Layout>
     )
@@ -35,11 +33,11 @@ class Numerals extends Component {
 
 Numerals.propTypes = {
   getInitialNumerals: PropTypes.func.isRequired,
-  searchOpen: PropTypes.bool
+  detailsOpen: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
-
+  detailsOpen: state.numerals.detailsOpen
 })
 
 const mapDispatchToProps = dispatch => ({

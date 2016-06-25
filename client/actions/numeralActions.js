@@ -3,15 +3,16 @@ import {
   RECEIVE_NUMERALS,
   SET_NUMERALS,
   FAIL_NUMERALS,
-  FIND_NUMERAL,
-  TOGGLE_DETAILS,
-  CURRENT_DETAILS
+  CLOSE_DETAILS,
+  OPEN_DETAILS,
+  CURRENT_DETAILS,
+  SET_CURRENT_NUMERAL
 } from 'constants/actionTypes'
 
 import config from '../../config/client'
 import { get } from 'superagent'
 
-// ADD ACTIONS FOR PAGINATION
+const numeralSearch = (nums, value) => nums.filter(num => num.value === value)[0]
 
 const requestNumerals = () => ({
   type: REQUEST_NUMERALS
@@ -36,19 +37,36 @@ const failNumerals = () => ({
   type: FAIL_NUMERALS
 })
 
-export const findNumeral = numeral => ({
-  type: FIND_NUMERAL,
-  numeral
+export const closeDetails = () => ({
+  type: CLOSE_DETAILS
 })
 
-export const toggleDetails = () => ({
-  type: TOGGLE_DETAILS
+export const openDetails = () => ({
+  type: OPEN_DETAILS
 })
 
-export const setCurrentDetails = details => ({
-  type: CURRENT_DETAILS,
-  details
-})
+export const findNumeral = numeral => {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    dispatch({
+      type: SET_CURRENT_NUMERAL,
+      numeral: numeralSearch(state.numerals.numeralCache, numeral)
+    })
+  }
+}
+
+export const setCurrentDetails = details => {
+  return dispatch => {
+    dispatch({
+      type: CURRENT_DETAILS,
+      details
+    })
+
+    return Promise.resolve()
+  }
+}
+
 
 export const getInitialNumerals = () => {
   return dispatch => {

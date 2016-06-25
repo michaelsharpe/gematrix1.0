@@ -11,11 +11,19 @@ class SearchList extends Component {
   }
 
   onEntryClick(entry) {
-    this.props.setDetails(entry)
+    this.props.setDetails({
+      type: 'entry',
+      details: entry
+    })
+    this.props.openDetails()
   }
 
   onNumeralClick(numeral) {
-    this.props.setDetails(numeral)
+    this.props.setDetails({
+      type: 'numeral',
+      details: numeral
+    })
+    this.props.openDetails()
   }
 
   render() {
@@ -49,7 +57,8 @@ class SearchList extends Component {
 
 SearchList.propTypes = {
   numeral: PropTypes.object,
-  setDetails: PropTypes.func
+  setDetails: PropTypes.func.isRequired,
+  openDetails: PropTypes.func.isRequired
 }
 
 SearchList.defaultProps = {
