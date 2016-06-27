@@ -1,13 +1,16 @@
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-import { Router, Route, browserHistory, IndexRoute } from 'react-router';
-import configureStore from 'store';
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import { Router, Route, browserHistory, IndexRoute } from 'react-router'
+import configureStore from 'store'
+import { syncHistoryWithStore } from 'react-router-redux'
 
 // Pages
-import App from './containers/AppContainer';
-import Numerals from './containers/NumeralContainer';
+import App from './containers/AppContainer'
+import Numerals from './containers/NumeralContainer'
 
-const store = configureStore();
+
+const store = configureStore()
+const history = syncHistoryWithStore(browserHistory, store)
 
 export default class Root extends Component {
 
@@ -21,12 +24,15 @@ export default class Root extends Component {
   render() {
     return (
       <Provider store={store} >
-        <Router history={browserHistory}>
+        <Router history={history}>
           <Route path="/" component={App}>
-            <IndexRoute component={Numerals}/>
+            <Route path="numerals" component={Numerals}>
+              <Route path=":numeral" component={Numerals}/>
+
+            </Route>
           </Route>
         </Router>
       </Provider>
-    );
+    )
   }
 }

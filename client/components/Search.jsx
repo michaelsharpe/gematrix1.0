@@ -9,17 +9,11 @@ class Search extends Component {
   }
 
   onKeyPress(e) {
-    const { findNumeral, setCurrentDetails } = this.props
+    const { transitionTo } = this.props
 
     if (e.key === 'Enter') {
       const numeral = e.currentTarget.value
-      findNumeral(+numeral)
-        .then(foundNumeral => {
-          setCurrentDetails({
-            type: 'numeral',
-            details: foundNumeral
-          })
-        })
+      transitionTo(`/numerals/${numeral}`)
     }
   }
 
@@ -46,7 +40,8 @@ Search.propTypes = {
   currentNumeral: PropTypes.object,
   findNumeral: PropTypes.func.isRequired,
   setCurrentDetails: PropTypes.func.isRequired,
-  openDetails: PropTypes.func.isRequired
+  openDetails: PropTypes.func.isRequired,
+  transitionTo: PropTypes.func.isRequired
 }
 
 export default Search

@@ -5,13 +5,45 @@ import Search from 'containers/SearchContainer'
 import Details from 'containers/DetailsContainer'
 
 class Numerals extends Component {
+  constructor(props) {
+    super(props)
+    this.findAndSetNumeral = this.findAndSetNumeral.bind(this)
+  }
+
   componentWillMount() {
-    const { getNumerals, closeDetails } = this.props
+    const { closeDetails, getInitialNumerals, received, params } = this.props
+
     if (window.innerWidth < 720) {
-      closeDetails();
+      closeDetails()
     }
 
-    getNumerals()
+    if (!received) {
+      getInitialNumerals()
+      .then(() => {
+        if (params.numeral) {
+          this.findAndSetNumeral(params.numeral)
+        }
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('component wil receive props')
+    if (this.props.params.numeral !== nextProps.params.numeral) {
+      this.findAndSetNumeral(nextProps.params.numeral)
+    }
+  }
+
+  findAndSetNumeral(num) {
+    const { findNumeral, setCurrentDetails } = this.props
+
+    return findNumeral(num)
+    .then(foundNumeral => {
+      setCurrentDetails({
+        type: 'numeral',
+        details: foundNumeral
+      })
+    })
   }
 
   render() {
@@ -23,7 +55,7 @@ class Numerals extends Component {
         </Panel>
 
         <Sidebar pinned={detailsOpen} width={50} scrollY={true}>
-            <Details />
+          <Details />
         </Sidebar>
       </Layout>
     )
@@ -31,9 +63,15 @@ class Numerals extends Component {
 }
 
 Numerals.propTypes = {
-  getNumerals: PropTypes.func.isRequired,
+  getInitialNumerals: PropTypes.func.isRequired,
+  findNumeral: PropTypes.func.isRequired,
+  setCurrentDetails: PropTypes.func.isRequired,
   closeDetails: PropTypes.func.isRequired,
-  detailsOpen: PropTypes.bool
+  detailsOpen: PropTypes.bool,
+  content: PropTypes.node,
+  details: PropTypes.node,
+  params: PropTypes.object,
+  received: PropTypes.bool.isRequired
 }
 
 export default Numerals

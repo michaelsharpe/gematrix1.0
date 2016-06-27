@@ -27,7 +27,7 @@ const reduceNumber = num => {
 
 const coloredNumber = num => {
   let color = ''
-  Object.getOwnPropertyNames(numberColors).forEach((prop, i, arr) => {
+  Object.getOwnPropertyNames(numberColors).forEach(prop => {
     if (+prop === num) {
       color = numberColors[prop]
     }
@@ -37,5 +37,9 @@ const coloredNumber = num => {
 }
 
 export const getColor = num => {
+  if (!num) {
+    return numberColors[0]
+  }
+
   return coloredNumber(reduceNumber(num))
 }

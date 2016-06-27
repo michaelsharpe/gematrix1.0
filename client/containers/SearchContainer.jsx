@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 
 import {
   findNumeral,
@@ -14,7 +15,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   findNumeral: numeral => dispatch(findNumeral(numeral)),
   setCurrentDetails: details => dispatch(setCurrentDetails(details)),
-  openDetails: () => dispatch(openDetails())
+  openDetails: () => dispatch(openDetails()),
+  transitionTo: path => dispatch(push(path))
 })
 
 const SearchContainer = connect(

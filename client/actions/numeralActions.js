@@ -59,8 +59,7 @@ export const setCurrentDetails = details => {
 export const findNumeral = numeral => {
   return (dispatch, getState) => {
     const state = getState();
-    const foundNumeral = numeralSearch(state.numerals.numeralCache, numeral)
-
+    const foundNumeral = numeralSearch(state.numerals.numeralCache, +numeral)
     dispatch({
       type: SET_CURRENT_NUMERAL,
       numeral: foundNumeral
@@ -81,8 +80,8 @@ export const getInitialNumerals = () => {
       .end((err, res) => {
         try {
           dispatch(receiveNumerals())
-          .then(() => dispatch(setNumerals(res.body.numerals)))
-          resolve()
+          .then(dispatch(setNumerals(res.body.numerals)))
+          .then(resolve())
         } catch (e) {
           console.log('GET request to /numerals failed.')
           dispatch(failNumerals())

@@ -26,7 +26,8 @@ NumeralDetails.propTypes = {
 
 NumeralDetails.defaultProps = {
   numeral: {
-    value: ''
+    value: '',
+    math: []
   }
 }
 

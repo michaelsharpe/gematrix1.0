@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 
 import { Button } from 'react-toolbox'
+import { Link } from 'react-router'
 
 class RefButton extends Component {
   constructor(props) {
@@ -14,7 +15,9 @@ class RefButton extends Component {
 
   render() {
     return (
-      <Button label={this.props.see.toString()} onMouseUp={this.onClick}/>
+      <Link to={`/numerals/${this.props.see}`}>
+        <Button label={this.props.see.toString()}/>
+      </Link>
     )
   }
 }
