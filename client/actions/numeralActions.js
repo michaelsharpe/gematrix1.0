@@ -45,17 +45,6 @@ export const openDetails = () => ({
   type: OPEN_DETAILS
 })
 
-export const findNumeral = numeral => {
-  return (dispatch, getState) => {
-    const state = getState();
-
-    dispatch({
-      type: SET_CURRENT_NUMERAL,
-      numeral: numeralSearch(state.numerals.numeralCache, numeral)
-    })
-  }
-}
-
 export const setCurrentDetails = details => {
   return dispatch => {
     dispatch({
@@ -67,23 +56,38 @@ export const setCurrentDetails = details => {
   }
 }
 
+export const findNumeral = numeral => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const foundNumeral = numeralSearch(state.numerals.numeralCache, numeral)
+
+    dispatch({
+      type: SET_CURRENT_NUMERAL,
+      numeral: foundNumeral
+    })
+
+    return Promise.resolve(foundNumeral)
+  }
+}
 
 export const getInitialNumerals = () => {
   return dispatch => {
-    console.log('Dispatch called')
-    dispatch(requestNumerals())
+    return new Promise(resolve => {
+      dispatch(requestNumerals())
 
-    get(`${config.api}/numerals`)
-    .type('application/json')
-    .accept('application/json')
-    .end((err, res) => {
-      try {
-        dispatch(receiveNumerals())
-        .then(() => dispatch(setNumerals(res.body.numerals)))
-      } catch (e) {
-        console.log('GET request to /numerals failed.')
-        dispatch(failNumerals())
-      }
+      get(`${config.api}/numerals`)
+      .type('application/json')
+      .accept('application/json')
+      .end((err, res) => {
+        try {
+          dispatch(receiveNumerals())
+          .then(() => dispatch(setNumerals(res.body.numerals)))
+          resolve()
+        } catch (e) {
+          console.log('GET request to /numerals failed.')
+          dispatch(failNumerals())
+        }
+      })
     })
   }
 }

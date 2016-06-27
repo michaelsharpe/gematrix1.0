@@ -1,13 +1,13 @@
-import React, { PropTypes, Component } from 'react';
-import { Input } from 'react-toolbox';
+import React, { PropTypes, Component } from 'react'
+import { Input } from 'react-toolbox'
 
-import { searchContainer } from 'styles/search';
+import { searchContainer } from 'styles/search'
 
 class SearchField extends Component {
   constructor(props) {
-    super(props);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    super(props)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   state = {
@@ -15,15 +15,22 @@ class SearchField extends Component {
   }
 
   handleKeyPress(e) {
+    const { findNumeral, setDetails } = this.props;
     if (e.key === 'Enter') {
-      const numeral = e.currentTarget.value;
-      this.props.findNumeral(+numeral);
+      const numeral = e.currentTarget.value
+      findNumeral(+numeral)
+        .then(foundNumeral => {
+          setDetails({
+            type: 'numeral',
+            details: foundNumeral
+          })
+        })
     }
   }
 
   handleChange = (value) => {
-    this.setState({ ...this.state, search: value });
-  };
+    this.setState({ ...this.state, search: value })
+  }
 
   render() {
     return (
@@ -36,12 +43,13 @@ class SearchField extends Component {
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}/>
       </div>
-    );
+    )
   }
 }
 
 SearchField.propTypes = {
-  findNumeral: PropTypes.func.isRequired
-};
+  findNumeral: PropTypes.func.isRequired,
+  setDetails: PropTypes.func.isRequired
+}
 
-export default SearchField;
+export default SearchField

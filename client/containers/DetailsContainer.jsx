@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import { closeDetails } from 'actions/numeralActions'
+import { closeDetails, findNumeral } from 'actions/numeralActions'
 import Details from 'components/Details'
 
 const mapStateToProps = state => ({
@@ -8,12 +8,13 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  closeDetails: () => dispatch(closeDetails())
+  closeDetails: () => dispatch(closeDetails()),
+  findNumeral: num => dispatch(findNumeral(num))
 })
 
 const DetailsContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Details);
+)(Details)
 
 export default DetailsContainer

@@ -9,7 +9,9 @@ const Search = ({
   openDetails
 }) => (
   <div>
-    <SearchField findNumeral={findNumeral}/>
+    <SearchField
+      findNumeral={findNumeral}
+      setDetails={setCurrentDetails}/>
     <SearchList
       numeral={currentNumeral}
       setDetails={setCurrentDetails}

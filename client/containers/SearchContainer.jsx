@@ -1,6 +1,10 @@
 import { connect } from 'react-redux'
 
-import { findNumeral, setCurrentDetails, openDetails } from 'actions/numeralActions'
+import {
+  findNumeral,
+  setCurrentDetails,
+  openDetails
+ } from 'actions/numeralActions'
 import Search from 'components/Search'
 
 const mapStateToProps = state => ({

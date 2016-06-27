@@ -1,26 +1,32 @@
 import React, { PropTypes } from 'react'
 import { IconButton } from 'react-toolbox'
 import NumeralDetails from 'components/NumeralDetails'
+import EntryDetails from 'components/EntryDetails'
 
 import { close } from 'styles/details'
 
-const Details = (props) => {
-  const { type, details } = props.currentDetails
+const Details = ({
+  currentDetails,
+  closeDetails,
+  findNumeral
+}) => {
+  const { type, details } = currentDetails
   const isNumeral = type === 'numeral'
   const isEntry = type === 'entry'
 
   return (
     <div>
-      <IconButton className={close} onMouseUp={props.closeDetails} icon="close"/>
+      <IconButton className={close} onMouseUp={closeDetails} icon="close"/>
       {isNumeral && <NumeralDetails numeral={details}/>}
-      {isEntry && <p>Entry</p>}
+      {isEntry && <EntryDetails findNumeral={findNumeral} entry={details}/>}
     </div>
   )
 }
 
 Details.propTypes = {
   currentDetails: PropTypes.object.isRequired,
-  closeDetails: PropTypes.func.isRequired
+  closeDetails: PropTypes.func.isRequired,
+  findNumeral: PropTypes.func.isRequired
 }
 
 Details.defaultProps = {
