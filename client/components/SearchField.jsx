@@ -6,26 +6,11 @@ import { searchContainer } from 'styles/search'
 class SearchField extends Component {
   constructor(props) {
     super(props)
-    this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
 
   state = {
     search: ''
-  }
-
-  handleKeyPress(e) {
-    const { findNumeral, setDetails } = this.props;
-    if (e.key === 'Enter') {
-      const numeral = e.currentTarget.value
-      findNumeral(+numeral)
-        .then(foundNumeral => {
-          setDetails({
-            type: 'numeral',
-            details: foundNumeral
-          })
-        })
-    }
   }
 
   handleChange = (value) => {
@@ -41,15 +26,14 @@ class SearchField extends Component {
           value={this.state.search}
           name="number" icon="search"
           onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress}/>
+          onKeyPress={this.props.onKeyPress}/>
       </div>
     )
   }
 }
 
 SearchField.propTypes = {
-  findNumeral: PropTypes.func.isRequired,
-  setDetails: PropTypes.func.isRequired
+  onKeyPress: PropTypes.func.isRequired
 }
 
 export default SearchField
