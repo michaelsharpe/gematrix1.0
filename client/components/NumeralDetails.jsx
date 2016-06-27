@@ -1,11 +1,23 @@
 import React, { PropTypes } from 'react'
-import { Card, CardTitle, CardMedia } from 'react-toolbox'
+import { Card, CardTitle, CardMedia, CardText, CardActions } from 'react-toolbox'
+import RefButton from 'components/refButton'
 
 import { getColor } from 'helpers/numeralHelper'
 import { numeralTitle } from 'styles/details'
 
-const NumeralDetails = ({ numeral }) => {
+const NumeralDetails = ({ numeral, findNumeral }) => {
   const math = numeral.math.length > 0 ? numeral.math[0] : ''
+
+  const numeralCards = numeral.comments.map((comment, i) => (
+    <Card key={i}>
+      <CardText>
+        {comment.content}
+      </CardText>
+      <CardActions>
+        {comment.see.map((see, ind) => <RefButton key={ind} see={see} findNumeral={findNumeral}/>)}
+      </CardActions>
+    </Card>
+  ))
 
   return (
     <Card>
@@ -15,13 +27,14 @@ const NumeralDetails = ({ numeral }) => {
           title={numeral.value.toString()}
           subtitle={math}/>
       </CardMedia>
-
+      {numeralCards}
     </Card>
   )
 }
 
 NumeralDetails.propTypes = {
-  numeral: PropTypes.object.isRequired
+  numeral: PropTypes.object.isRequired,
+  findNumeral: PropTypes.func.isRequired
 }
 
 NumeralDetails.defaultProps = {

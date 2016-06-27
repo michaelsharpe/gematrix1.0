@@ -17,7 +17,7 @@ const Details = ({
   return (
     <div>
       <IconButton className={close} onMouseUp={closeDetails} icon="close"/>
-      {isNumeral && <NumeralDetails numeral={details}/>}
+      {isNumeral && <NumeralDetails findNumeral={findNumeral} numeral={details}/>}
       {isEntry && <EntryDetails findNumeral={findNumeral} entry={details}/>}
     </div>
   )

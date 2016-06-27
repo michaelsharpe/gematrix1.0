@@ -8,7 +8,7 @@ import {
 } from 'react-toolbox'
 
 import RefButton from 'components/RefButton'
-import { entryTitle } from 'styles/details'
+import { entryTitle, entryText } from 'styles/details'
 
 class EntryDetails extends Component {
   render() {
@@ -31,8 +31,12 @@ class EntryDetails extends Component {
           <CardMedia color="rgb(255,152,0)">
             <CardTitle
               className={entryTitle}
-              title={entry.word}
-              subtitle={entry.definition}/>
+              title={entry.word}/>
+            <CardText className={entryText}>
+              {entry.definition && <p>Definition: {entry.definition}</p>}
+              {entry.language && <p>Language: {entry.language}</p>}
+              {entry.pronunciation && <p>Pronunciation: {entry.pronunciation}</p>}
+            </CardText>
           </CardMedia>
         </Card>
         {entryCards}
