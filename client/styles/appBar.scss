@@ -1,6 +1,16 @@
-.appBar {
-  height: 65px;
-}
+
+@import "./colors";
+@import "./globals";
+@import "./mixins";
+
+$appbar-color: $color-primary-dark !default;
+$appbar-contrast: $color-primary-contrast !default;
+$appbar-title-total-distance: 8 * $unit !default;
+$appbar-height: 5 * $unit !default;
+$appbar-height-m-portrait: 5.6 * $unit !default;
+$appbar-height-m-landscape: 4.8 * $unit !default;
+$appbar-h-padding: 2.4 * $unit !default;
+$appbar-title-distance: $appbar-title-total-distance - $appbar-h-padding !default;
 
 .brand {
   margin-bottom: 5px;
@@ -16,4 +26,38 @@
   font-family: 'Orbitron', helvetica;
   letter-spacing: 2px;
   font-size: 1.4rem;
+}
+
+.appBar {
+  display: flex;
+  height: $appbar-height;
+  align-items: center;
+  padding: 0 $appbar-h-padding;
+  color: $appbar-contrast;
+  background: $appbar-color;
+
+  @media screen and (max-width: $layout-breakpoint-xxs) and (orientation: portrait) {
+    height: $appbar-height-m-portrait;
+  }
+
+  @media screen and (max-width: $layout-breakpoint-xs) and (orientation: landscape) {
+    height: $appbar-height-m-landscape;
+  }
+
+  &:not(.flat) {
+    z-index: $z-index-high;
+    box-shadow: 0 2px 5px rgba(0,0,0,.26);
+  }
+
+  &.fixed {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: $z-index-highest;
+  }
+
+  a {
+    color: $appbar-contrast;
+  }
 }

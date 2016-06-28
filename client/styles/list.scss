@@ -1,4 +1,181 @@
+@import "./colors";
+@import "./globals";
+@import "./mixins";
+
+$list-vertical-padding: .8 * $unit !default;
+$list-horizontal-padding: 1.6 * $unit !default;
+$list-content-left-spacing: 7.2 * $unit !default;
+$list-subheader-height: 4.8 * $unit !default;
+$list-subheader-font-size: 1.4 * $unit !default;
+$list-subheader-font-weight: 500 !default;
+$list-divider-height: .1 * $unit !default;
+$list-item-min-height: 4.8 * $unit !default;
+$list-item-min-height-legend: 7.2 * $unit !default;
+$list-item-hover-color: $palette-grey-200 !default;
+$list-item-legend-margin-top: .3 * $unit !default;
+$list-item-icon-font-size: 2.4 * $unit !default;
+$list-item-icon-size: 1.8 * $unit !default;
+$list-item-right-icon-margin: $list-content-left-spacing - 2 * $list-horizontal-padding - $list-item-icon-size !default;
+$list-item-right-checkbox-margin: $list-item-right-icon-margin + $list-horizontal-padding !default;
+$list-item-avatar-height: 4 * $unit !default;
+$list-item-avatar-margin: .8 * $unit !default;
+$list-item-child-margin: .8 * $unit !default;
+
+.list {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  padding: $list-vertical-padding 0;
+  text-align: left;
+  white-space: nowrap;
+  list-style: none;
+}
+
+.subheader {
+  padding-left: $list-horizontal-padding;
+  margin: - $list-vertical-padding 0 0;
+  font-size: $list-subheader-font-size;
+  font-weight: $list-subheader-font-weight;
+  line-height: $list-subheader-height;
+  color: $color-text-secondary;
+}
+
+.divider {
+  height: $list-divider-height;
+  margin: - $list-divider-height 0 0;
+  background-color: $color-divider;
+  border: 0;
+  &.inset {
+    margin-right: $list-horizontal-padding;
+    margin-left: $list-content-left-spacing;
+  }
+  .list + & {
+    margin-top: - $list-vertical-padding;
+  }
+  .listItem ~ & {
+    margin-top: $list-vertical-padding;
+    margin-bottom: $list-vertical-padding;
+  }
+}
+
+.listItem {
+  position: relative;
+  > [data-react-toolbox="ripple"] {
+    overflow: hidden;
+  }
+
+  .ripple {
+    color: $color-text-secondary;
+  }
+}
+
+.item {
+  position: relative;
+  display: flex;
+  min-height: $list-item-min-height;
+  align-items: center;
+  padding: 0 $list-horizontal-padding;
+  color: $color-text;
+  &.selectable:not(.disabled):hover {
+    cursor: pointer;
+    background-color: $list-item-hover-color;
+  }
+  &.disabled {
+    pointer-events: none;
+    &:not(.checkboxItem) {
+      opacity: .5;
+    }
+    > .checkbox > [data-react-toolbox="label"] {
+      opacity: .5;
+    }
+  }
+}
+
+.left {
+  [data-react-toolbox="font-icon"] {
+    width: $list-item-icon-size;
+  }
+  & :last-child {
+    > [data-react-toolbox="font-icon"] {
+      margin-right: $list-item-right-icon-margin;
+    }
+  }
+}
+
+.right {
+  > :last-child  {
+    margin-right: 0;
+  }
+
+  > :first-child {
+    margin-left: $list-horizontal-padding;
+  }
+}
+
+.left, .right {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.itemAction {
+  display: flex;
+  margin: $list-item-child-margin $list-horizontal-padding $list-item-child-margin 0;
+
+  > * {
+    padding: 0;
+  }
+
+  > [data-react-toolbox="font-icon"] {
+    font-size: $list-item-icon-font-size;
+    color: $color-text-secondary;
+  }
+}
+
 .itemContentRoot {
+  display: block;
+  flex-grow: 1;
   height: auto;
-  min-height: 7.2rem;
+  min-height: 7.2 * $unit;
+
+  &.large {
+    display: flex;
+    height: auto;
+    min-height: $list-item-min-height-legend;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.checkbox {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: $list-item-min-height;
+  align-items: center;
+  margin: 0;
+  cursor: pointer;
+  > [data-react-toolbox="check"] {
+    margin-right: $list-item-right-checkbox-margin;
+  }
+  > [data-react-toolbox="label"] {
+    padding-left: 0;
+  }
+}
+
+.itemText {
+  display: block;
+
+  &:not(.primary) {
+    padding-top: $list-item-legend-margin-top;
+    font-size: $font-size-small;
+    color: $color-text-secondary;
+    white-space: normal;
+  }
+
+  &.primary {
+    font-size: $font-size-normal;
+    color: $color-text;
+  }
 }

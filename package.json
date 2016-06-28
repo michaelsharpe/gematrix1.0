@@ -33,7 +33,7 @@
     "react-router": "^2.4.1",
     "react-router-redux": "^4.0.5",
     "react-tap-event-plugin": "^1.0.0",
-    "react-toolbox": "^1.0.1",
+    "react-toolbox": "michaelsharpe/react-toolbox#dev",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "striptags": "^2.1.1",

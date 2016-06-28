@@ -4,25 +4,36 @@ import {
   CardTitle,
   CardMedia,
   CardText,
-  CardActions
+  CardActions,
+  IconMenu,
+  MenuItem
 } from 'react-toolbox'
 
-import RefButton from 'components/RefButton'
+import SeeButton from 'components/SeeButton'
 import { entryTitle, entryText } from 'styles/details'
 
 class EntryDetails extends Component {
   render() {
     const { findNumeral, entry } = this.props
-    const entryCards = entry.comments.map((comment, i) => (
+    const entryCards = entry.comments.map((comment, i) => {
+      const refs = comment.see.length > 0
+      const actions = (<CardActions>
+        {comment.see.map((see, ind) => <SeeButton key={ind} see={see} findNumeral={findNumeral}/>)}
+      </CardActions>)
+
+      return (
       <Card key={i}>
+        <IconMenu icon="more_vert" position="topRight" menuRipple={true}>
+          <MenuItem value="download" icon="get_app" caption="Download" />
+          <MenuItem value="help" icon="favorite" caption="Favorite" />
+          <MenuItem value="settings" icon="open_in_browser" caption="Open in app" />
+        </IconMenu>
         <CardText>
           {comment.content}
         </CardText>
-        <CardActions>
-          {comment.see.map((see, ind) => <RefButton key={ind} see={see} findNumeral={findNumeral}/>)}
-        </CardActions>
+        {refs && actions}
       </Card>
-    ))
+    )})
 
 
     return (

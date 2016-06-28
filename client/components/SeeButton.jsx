@@ -3,7 +3,7 @@ import React, { PropTypes, Component } from 'react'
 import { Button } from 'react-toolbox'
 import { Link } from 'react-router'
 
-class RefButton extends Component {
+class SeeButton extends Component {
   constructor(props) {
     super(props)
     this.onClick = this.onClick.bind(this)
@@ -22,9 +22,9 @@ class RefButton extends Component {
   }
 }
 
-RefButton.propTypes = {
+SeeButton.propTypes = {
   see: PropTypes.number.isRequired,
   findNumeral: PropTypes.func.isRequired
 }
 
-export default RefButton
+export default SeeButton

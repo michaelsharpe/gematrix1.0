@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { Card, CardTitle, CardMedia, CardText, CardActions } from 'react-toolbox'
-import RefButton from 'components/refButton'
+import SeeButton from 'components/SeeButton'
 
 import { getColor } from 'helpers/numeralHelper'
 import { numeralTitle } from 'styles/details'
@@ -14,7 +14,7 @@ const NumeralDetails = ({ numeral, findNumeral }) => {
         {comment.content}
       </CardText>
       <CardActions>
-        {comment.see.map((see, ind) => <RefButton key={ind} see={see} findNumeral={findNumeral}/>)}
+        {comment.see.map((see, ind) => <SeeButton key={ind} see={see} findNumeral={findNumeral}/>)}
       </CardActions>
     </Card>
   ))

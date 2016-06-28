@@ -1,0 +1,171 @@
+@import "./colors";
+@import "./globals";
+@import "./mixins";
+
+$menu-expand-duration: .3s !default;
+$menu-fade-duration: .2s !default;
+$menu-ripple-delay: .3s !default;
+$menu-background-color: $color-white !default;
+$menu-padding: .8 * $unit 0 !default;
+$menu-outline-border-radius: .2 * $unit !default;
+$menu-item-hover-background: $palette-grey-200 !default;
+$menu-item-selected-background: transparent !default;
+$menu-item-icon-font-size: 2.4 * $unit !default;
+$menu-item-icon-size: 1.6 * $menu-item-icon-font-size !default;
+$menu-item-height: 3 * $unit !default;
+$menu-item-padding: 1.2 * $unit !default;
+$menu-item-font-size: 1.6 * $unit !default;
+$menu-divider-height: (4.8 * $unit) / 4 !default;
+$menu-icon-size: 2.3 * $unit !default;
+$menu-icon-ripple-duration: 650ms !default;
+$caption-font-size: 1.2 * $unit;
+
+.iconMenu {
+  position: relative;
+  display: inline-block;
+  text-align: right !important;
+  .icon {
+    cursor: pointer;
+  }
+}
+
+.menu {
+  position: relative;
+  display: inline-block;
+  &.topLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    > .outline {
+      transform-origin: 0 0;
+    }
+  }
+  &.topRight {
+    position: absolute;
+    top: 0;
+    right: 0;
+    > .outline {
+      transform-origin: 100% 0;
+    }
+  }
+  &.bottomLeft {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    > .outline {
+      transform-origin: 0 100%;
+    }
+  }
+  &.bottomRight {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    > .outline {
+      transform-origin: 100% 100%;
+    }
+  }
+  &:not(.static) {
+    z-index: $z-index-higher;
+    pointer-events: none;
+    > .outline {
+      opacity: 0;
+      transition: transform $menu-expand-duration $animation-curve-default,
+      opacity $menu-fade-duration $animation-curve-default;
+      transform: scale(0);
+      will-change: transform;
+    }
+    > .menuInner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+    &.rippled:not(.active) {
+      > .outline {
+        transition-delay: $menu-ripple-delay;
+      }
+      > .menuInner {
+        transition-delay: $menu-ripple-delay;
+      }
+    }
+    &.active {
+      pointer-events: all;
+      > .outline {
+        opacity: 1;
+        transform: scale(1);
+      }
+      > .menuInner {
+        opacity: 1;
+        transition: opacity $menu-fade-duration $animation-curve-default,
+        clip $menu-expand-duration $animation-curve-default;
+      }
+    }
+  }
+}
+
+.outline {
+  @include shadow-2dp();
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  background-color: $menu-background-color;
+  border-radius: $menu-outline-border-radius;
+}
+
+.menuInner {
+  position: relative;
+  display: block;
+  padding: $menu-padding;
+  text-align: left;
+  white-space: nowrap;
+  list-style: none;
+}
+
+.menuItem {
+  position: relative;
+  display: flex;
+  height: $menu-item-height;
+  align-items: center;
+  padding: 0 $menu-item-padding;
+  overflow: hidden;
+  font-size: $menu-item-font-size;
+  color: $color-text;
+  &:not(.disabled):hover {
+    cursor: pointer;
+    background-color: $menu-item-hover-background;
+  }
+  &.disabled {
+    pointer-events: none;
+    opacity: .5;
+  }
+  &.selected {
+    font-weight: 500;
+    background-color: $menu-item-selected-background;
+  }
+  .ripple {
+    color: $color-text-secondary;
+  }
+
+  .icon {
+    width: $menu-item-icon-size;
+    font-size: $menu-item-icon-font-size !important;
+  }
+}
+
+.caption {
+  flex-grow: 1;
+  font-size: $caption-font-size;
+}
+
+.shortcut {
+  margin-left: $menu-item-padding;
+}
+
+.menuDivider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: $menu-divider-height 0;
+  background-color: $color-divider;
+}
