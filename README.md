@@ -2,11 +2,23 @@
 -------------------------------
 Gematria database and service for keeping track of numerical exegesis.
 
+## Installing
+
+You will need to have mongodb running locally (google installing mongo on your OS to get it up and running).
+
+Then run 'npm install' to install the dependencies.
+
+Next, seed the database according to the instructions below.
+
+Finally, you can start the client with `npm run start:client` and you can start the server with `npm start'.  You will need to have both running.
+
+So in total, you will need 3 tabs open, one with mongoi, one with the client and one with the server.
+
 ## Seeding
 
 There is a database seed in `./seeds` that will populate a given database with scraped data from Paul Foster Case's Gematria Notebooks.  Currently there is only the first 900 numbers, and none of the supplementary notes on the paths, or alchemy.
 
-To populate a given database, first go into `./config.js` and set the variable 'db.toSeed' to the database you would like to see.  Then run `npm run pfcSeed` and the script will populate you database.
+To populate a given database, first go into `./config.js` and set the variable 'db.toSeed' to the database you would like to seed.  Then run `npm run pfcSeed` and the script will populate you database.
 
 ## API Design
 
